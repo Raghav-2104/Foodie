@@ -11,7 +11,9 @@ class Menu extends StatefulWidget {
 }
 
 class _MenuState extends State<Menu> {
-  Set<String> selectedItems = Set<String>();
+  static Set<String> selectedItems = Set<String>();
+  static Set<String> selectedPrice = Set<String>();
+  static List temp = [];
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   FirebaseAuth _auth = FirebaseAuth.instance;
   @override
@@ -34,6 +36,7 @@ class _MenuState extends State<Menu> {
                   var itemName = doc?['name'];
                   var itemPrice = doc?['price'];
                   bool isAdded = selectedItems.contains(itemName);
+                  print(doc?.data());
                   return Card(
                       child: ListTile(
                     title: Text(doc?['name']),
@@ -42,13 +45,21 @@ class _MenuState extends State<Menu> {
                       onPressed: () {
                         setState(() {
                           if (isAdded) {
+                            temp = selectedItems.toList();
+                            int indexOfItem = temp.indexOf(itemName);
+                            selectedPrice.remove(snapshot.data?.docs[indexOfItem]['price']);
                             selectedItems.remove(itemName);
-                            cart.set({'items': selectedItems});
-                            print(selectedItems);
+                            cart.set({'items': selectedItems,'prices':selectedPrice});
+                            // print(selectedItems);
+                            print(selectedPrice);
                           } else {
                             selectedItems.add(itemName);
-                            print(selectedItems);
-                            cart.set({'items': selectedItems});
+                            temp = selectedItems.toList();
+                            int indexOfItem = temp.indexOf(itemName);
+                            selectedPrice.add(snapshot.data?.docs[indexOfItem]['price']);
+                            // print(selectedItems);
+                            print(selectedPrice);
+                            cart.set({'items': selectedItems,'prices':selectedPrice});
                           }
                         });
                       },
