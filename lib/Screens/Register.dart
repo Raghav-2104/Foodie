@@ -1,7 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../Authentication/auth.dart';
 import '../Widgets/PopUpBox.dart';
 import 'Login.dart';
+
 //Errors in Validation
 class Registration extends StatefulWidget {
   final Function onTap;
@@ -13,16 +16,20 @@ class Registration extends StatefulWidget {
 class _RegistrationState extends State<Registration> {
   final _formKey = GlobalKey<FormState>();
   final Auth _auth = Auth();
+  FirebaseFirestore firestore = FirebaseFirestore.instance;
   String name = '';
   String email = '';
   String phoneNumber = '';
   String password = '';
   String confirm = '';
   void pressed() {
-    print('In Func');
     Navigator.pop(context);
     Navigator.push(
-        context, MaterialPageRoute(builder: (context) => LoginCustomer(onTap: widget.onTap,)));
+        context,
+        MaterialPageRoute(
+            builder: (context) => LoginCustomer(
+                  onTap: widget.onTap,
+                )));
   }
 
   @override
@@ -222,6 +229,22 @@ class _RegistrationState extends State<Registration> {
                         email, password);
                     if (result != null) {
                       print(result);
+                      try {
+                        // Reference to the Firestore collection "users"
+                        CollectionReference usersCollection =
+                            FirebaseFirestore.instance.collection('users');
+
+                        // Create a new document in the "users" collection with the user's UID as the document ID
+                        await usersCollection.doc(email).set({
+                          'name': name,
+                          'email': email,
+                          'phoneNumber': phoneNumber,
+                          // Add other user details as needed
+                        });
+                      } catch (e) {
+                        print('Error adding user details to Firestore: $e');
+                        // Handle the error appropriately
+                      }
                       // ignore: use_build_context_synchronously
                       showDialog(
                           context: context,

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:canteen/Authentication/auth.dart';
 import 'Home.dart';
 import 'Register.dart';
-
 class LoginCustomer extends StatefulWidget {
   final Function onTap;
   LoginCustomer({required this.onTap});
@@ -16,7 +15,6 @@ class _LoginCustomerState extends State<LoginCustomer> {
   final Auth _auth = Auth();
   String email = '';
   String password = '';
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -127,12 +125,13 @@ class _LoginCustomerState extends State<LoginCustomer> {
                           Navigator.push(context,
                               MaterialPageRoute(builder: (context) => Home()));
                         } else {
-                          showDialog(
+                        // ignore: use_build_context_synchronously
+                        showDialog(
                             context: context,
                             builder: (context) {
                               return AlertDialog(
-                                  title: Text('Error'),
-                                  content: Text('Invalid Credentials'),
+                                  title:const Text('Error'),
+                                  content: const Text('Invalid Credentials'),
                                   actions: [
                                     Padding(
                                       padding: const EdgeInsets.only(right: 30),
@@ -152,15 +151,15 @@ class _LoginCustomerState extends State<LoginCustomer> {
                         }
                       }
                     },
-                    child: Text(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.amber,
+                      foregroundColor: Colors.red[900],
+                    ),
+                    child:const Text(
                       'Login',
                       style: TextStyle(
                         fontSize: 20,
                       ),
-                    ),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.amber,
-                      foregroundColor: Colors.red[900],
                     ),
                   ),
 
@@ -172,15 +171,15 @@ class _LoginCustomerState extends State<LoginCustomer> {
 
                   ElevatedButton(
                     onPressed: () {},
-                    child: Text(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.amber,
+                      foregroundColor: Colors.red[900],
+                    ),
+                    child:const Text(
                       'Forget Password',
                       style: TextStyle(
                         fontSize: 20,
                       ),
-                    ),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.amber,
-                      foregroundColor: Colors.red[900],
                     ),
                   ),
                 ],
@@ -194,8 +193,8 @@ class _LoginCustomerState extends State<LoginCustomer> {
 
             Row(
               children: [
-                Padding(padding: EdgeInsets.symmetric(horizontal: 50)),
-                Text(
+              const Padding(padding: EdgeInsets.symmetric(horizontal: 50)),
+              const Text(
                   'Not a User?',
                   style: TextStyle(
                     fontSize: 22,
@@ -213,7 +212,7 @@ class _LoginCustomerState extends State<LoginCustomer> {
                         MaterialPageRoute(
                             builder: (context) => Registration(onTap: widget.onTap,)));
                   },
-                  child: Text(
+                  child:const Text(
                     'Register',
                     style: TextStyle(
                       color: Colors.blue,
