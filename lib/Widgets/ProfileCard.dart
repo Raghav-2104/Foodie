@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 class ProfileCard extends StatefulWidget {
   final String title;
   final String data;
@@ -32,7 +31,7 @@ class _ProfileCardState extends State<ProfileCard> {
       ),
       child: ListTile(
         title: Text(
-          widget.title + " :",
+          "${widget.title} :",
           style: const TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 18,
@@ -53,7 +52,7 @@ class _ProfileCardState extends State<ProfileCard> {
               context: context,
               builder: (context) {
                 return AlertDialog(
-                  title: Text('Edit ' + widget.title),
+                  title: Text('Edit ${widget.title}'),
                   content: TextField(
                     controller: _controller,
                     decoration: InputDecoration(

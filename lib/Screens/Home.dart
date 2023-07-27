@@ -1,6 +1,6 @@
+import 'package:canteen/Screens/AddProduct.dart';
 import 'package:canteen/Screens/Cart.dart';
 import 'package:canteen/Screens/Menu.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
@@ -17,12 +17,12 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   int index = 0;
-  List<Widget> pages = [Menu(), Cart(), Profile()];
+  List<Widget> pages = [Menu(), Cart(), Profile(),AdminPage()];
   @override
   Widget build(BuildContext context) {
-    final user = _auth.currentUser;
     return Scaffold(
         appBar: AppBar(
+          title: const Text('VES Canteen'),
           actions: [
             IconButton(
               onPressed: () async {
@@ -31,8 +31,10 @@ class _HomeState extends State<Home> {
               icon: const Icon(Icons.logout),
             )
           ],
+          backgroundColor: Colors.black,
+          elevation: 0,
         ),
-        body: pages[index],
+        body: SafeArea(child: pages[index]),
         bottomNavigationBar: Container(
           color: Colors.black,
           child: Padding(
@@ -45,10 +47,12 @@ class _HomeState extends State<Home> {
                 });
               },
               padding: const EdgeInsets.all(8),
-              tabs: const [
-                GButton(icon: (Icons.menu), text: 'Menu'),
-                GButton(icon: (Icons.shopping_cart), text: 'Cart'),
-                GButton(icon: (Icons.person), text: 'Profile'),
+              tabs:  [
+                const GButton(icon: (Icons.menu), text: 'Menu'),
+                const GButton(icon: (Icons.shopping_cart), text: 'Cart'),
+                const GButton(icon: (Icons.person), text: 'Profile'),
+                if(_auth.currentUser?.email=='test@ves.ac.in') const GButton(icon: (Icons.edit), text: 'Edit Menu'),
+                
               ],
               color: Colors.white,
               activeColor: Colors.red,
