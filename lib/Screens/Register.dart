@@ -4,6 +4,8 @@ import '../Widgets/PopUpBox.dart';
 import 'Login.dart';
 //Errors in Validation
 class Registration extends StatefulWidget {
+  final Function onTap;
+  Registration({required this.onTap});
   @override
   State<Registration> createState() => _RegistrationState();
 }
@@ -20,7 +22,7 @@ class _RegistrationState extends State<Registration> {
     print('In Func');
     Navigator.pop(context);
     Navigator.push(
-        context, MaterialPageRoute(builder: (context) => LoginCustomer()));
+        context, MaterialPageRoute(builder: (context) => LoginCustomer(onTap: widget.onTap,)));
   }
 
   @override

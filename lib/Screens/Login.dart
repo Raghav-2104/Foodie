@@ -4,8 +4,8 @@ import 'Home.dart';
 import 'Register.dart';
 
 class LoginCustomer extends StatefulWidget {
-  // final Function toggleView;
-  // LoginCustomer({required this.toggleView});
+  final Function onTap;
+  LoginCustomer({required this.onTap});
 
   @override
   State<LoginCustomer> createState() => _LoginCustomerState();
@@ -211,7 +211,7 @@ class _LoginCustomerState extends State<LoginCustomer> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => Registration()));
+                            builder: (context) => Registration(onTap: widget.onTap,)));
                   },
                   child: Text(
                     'Register',
