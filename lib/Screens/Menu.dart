@@ -30,48 +30,52 @@ class _MenuState extends State<Menu> {
           } else if (snapshot.hasError) {
             return Text('Error:${snapshot.error}');
           } else {
-            return Expanded(
-              child: ListView.builder(
-                itemCount: snapshot.data?.docs.length,
-                itemBuilder: (context, index) {
-                  var doc = snapshot.data?.docs[index];
-                  var itemName = doc?['name'];
-                  var itemPrice = doc?['price'];
-                  bool isAdded = selectedItems.contains(itemName);
-                  return Card(
-                      child: ListTile(
-                    title: Text(doc?['name']),
-                    subtitle: Text(doc?['price']),
-                    trailing: ElevatedButton(
-                      onPressed: () {
-                        setState(() {
-                          if (selectedItems.contains(itemName)) {
-                            selectedItems.remove(itemName);
-                            selectedPrice.remove(itemPrice);
-                            itemList.removeWhere(
-                                (element) => element['itemName'] == itemName);
-                            total = total - int.parse(itemPrice);
-                          } else {
-                            selectedItems.add(itemName);
-                            selectedPrice.add(itemPrice);
-                            itemList.add({
-                              'itemName': itemName,
-                              'itemPrice': itemPrice,
-                              'quantity': 1
+            return Column(
+              children: [
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: snapshot.data?.docs.length,
+                    itemBuilder: (context, index) {
+                      var doc = snapshot.data?.docs[index];
+                      var itemName = doc?['name'];
+                      var itemPrice = doc?['price'];
+                      bool isAdded = selectedItems.contains(itemName);
+                      return Card(
+                          child: ListTile(
+                        title: Text(doc?['name']),
+                        subtitle: Text(doc?['price']),
+                        trailing: ElevatedButton(
+                          onPressed: () {
+                            setState(() {
+                              if (selectedItems.contains(itemName)) {
+                                selectedItems.remove(itemName);
+                                selectedPrice.remove(itemPrice);
+                                itemList.removeWhere(
+                                    (element) => element['itemName'] == itemName);
+                                total = total - int.parse(itemPrice);
+                              } else {
+                                selectedItems.add(itemName);
+                                selectedPrice.add(itemPrice);
+                                itemList.add({
+                                  'itemName': itemName,
+                                  'itemPrice': itemPrice,
+                                  'quantity': 1
+                                });
+                                total = total + int.parse(itemPrice);
+                              }
+                              cart.set({
+                                'itemList':itemList,
+                                'total': total,
+                              });
                             });
-                            total = total + int.parse(itemPrice);
-                          }
-                          cart.set({
-                            'itemList':itemList,
-                            'total': total,
-                          });
-                        });
-                      },
-                      child: Icon(isAdded ? Icons.remove : Icons.add),
-                    ),
-                  ));
-                },
-              ),
+                          },
+                          child: Icon(isAdded ? Icons.remove : Icons.add),
+                        ),
+                      ));
+                    },
+                  ),
+                ),
+              ],
             );
           }
         },

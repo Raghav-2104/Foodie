@@ -19,94 +19,92 @@ class _CartState extends State<Cart> {
     final docRef = firestore.collection('Cart').doc(_auth.currentUser?.email);
 
     print('total=${total}');
-    return Container(
-      child: Column(
-        children: [
-          Expanded(
-            child: StreamBuilder<DocumentSnapshot>(
-              stream: docRef.snapshots(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(
-                    child: CircularProgressIndicator(),
-                  );
-                } else if (snapshot.hasError) {
-                  return Text("Error:${snapshot.error}");
-                } else {
-                  List cartItems = snapshot.data?.get('itemList');
-                  if (cartItems.isEmpty) {
-                    return const Text('Cart is empty.');
-                  }
-                  print(snapshot.data?.get('total'));
-                  total = snapshot.data?.get('total');
-                  return ListView.builder(
-                    itemCount: cartItems.length,
-                    itemBuilder: (context, index) {
-                      print(cartItems[index]);
-                      return Card(
-                        child: ListTile(
-                            title: Text(cartItems[index]['itemName']),
-                            subtitle: Text('₹' + cartItems[index]['itemPrice']),
-                          //add quantity stepper
-                          trailing: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              IconButton(
-                                icon: Icon(Icons.remove),
-                                onPressed: () {
-                                  setState(() {
-                                    if (cartItems[index]['quantity'] > 1) {
-                                      cartItems[index]['quantity']--;
-                                      total = total -
-                                          int.parse(
-                                              cartItems[index]['itemPrice']);
-                                      docRef.update({
-                                        'itemList': cartItems,
-                                        'total': total
-                                      });
-                                    }
-                                    else{
-                                      total = total -
-                                          int.parse(
-                                              cartItems[index]['itemPrice']);
-                                      cartItems.removeAt(index);
-                                      docRef.update(
-                                          {'itemList': cartItems, 'total': total});
-                                    }
-                                  });
-                                },
-                              ),
-                              Text(cartItems[index]['quantity'].toString()),
-                              IconButton(
-                                icon: Icon(Icons.add),
-                                onPressed: () {
-                                  setState(() {
-                                    cartItems[index]['quantity']++;
-                                    total = total +
-                                        int.parse(cartItems[index]['itemPrice']);
+    return Column(
+      children: [
+        Expanded(
+          child: StreamBuilder<DocumentSnapshot>(
+            stream: docRef.snapshots(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              } else if (snapshot.hasError) {
+                return Text("Error:${snapshot.error}");
+              } else {
+                List cartItems = snapshot.data?.get('itemList');
+                if (cartItems.isEmpty) {
+                  return const Text('Cart is empty.');
+                }
+                print(snapshot.data?.get('total'));
+                total = snapshot.data?.get('total');
+                return ListView.builder(
+                  itemCount: cartItems.length,
+                  itemBuilder: (context, index) {
+                    print(cartItems[index]);
+                    return Card(
+                      child: ListTile(
+                          title: Text(cartItems[index]['itemName']),
+                          subtitle: Text('₹' + cartItems[index]['itemPrice']),
+                        //add quantity stepper
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            IconButton(
+                              icon: Icon(Icons.remove),
+                              onPressed: () {
+                                setState(() {
+                                  if (cartItems[index]['quantity'] > 1) {
+                                    cartItems[index]['quantity']--;
+                                    total = total -
+                                        int.parse(
+                                            cartItems[index]['itemPrice']);
                                     docRef.update({
                                       'itemList': cartItems,
                                       'total': total
                                     });
+                                  }
+                                  else{
+                                    total = total -
+                                        int.parse(
+                                            cartItems[index]['itemPrice']);
+                                    cartItems.removeAt(index);
+                                    docRef.update(
+                                        {'itemList': cartItems, 'total': total});
+                                  }
+                                });
+                              },
+                            ),
+                            Text(cartItems[index]['quantity'].toString()),
+                            IconButton(
+                              icon: Icon(Icons.add),
+                              onPressed: () {
+                                setState(() {
+                                  cartItems[index]['quantity']++;
+                                  total = total +
+                                      int.parse(cartItems[index]['itemPrice']);
+                                  docRef.update({
+                                    'itemList': cartItems,
+                                    'total': total
                                   });
-                                },
-                              ),
-                            ],
-                          ),
+                                });
+                              },
+                            ),
+                          ],
                         ),
-                      );
-                    },
-                  );
-                }
-              },
-            ),
+                      ),
+                    );
+                  },
+                );
+              }
+            },
           ),
-          Center(child: Text('Total=₹$total')),
-          Center(
-              child:
-                  TextButton(onPressed: () {}, child: Text('Proceed To Pay')))
-        ],
-      ),
+        ),
+        Center(child: Text('Total=₹$total')),
+        Center(
+            child:
+                TextButton(onPressed: () {}, child: Text('Proceed To Pay')))
+      ],
     );
   }
 }

@@ -1,7 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:canteen/Authentication/auth.dart';
 import 'Home.dart';
 import 'Register.dart';
+
 class LoginCustomer extends StatefulWidget {
   final Function onTap;
   LoginCustomer({required this.onTap});
@@ -13,6 +16,7 @@ class LoginCustomer extends StatefulWidget {
 class _LoginCustomerState extends State<LoginCustomer> {
   final _formKey = GlobalKey<FormState>();
   final Auth _auth = Auth();
+  FirebaseAuth auth = FirebaseAuth.instance;
   String email = '';
   String password = '';
   @override
@@ -122,15 +126,19 @@ class _LoginCustomerState extends State<LoginCustomer> {
                             email, password);
                         if (result != null) {
                           Navigator.pop(context);
+                          FirebaseFirestore.instance
+                              .collection('Cart')
+                              .doc(auth.currentUser?.email)
+                              .set({'itemList':[],'total': 0});
                           Navigator.push(context,
                               MaterialPageRoute(builder: (context) => Home()));
                         } else {
-                        // ignore: use_build_context_synchronously
-                        showDialog(
+                          // ignore: use_build_context_synchronously
+                          showDialog(
                             context: context,
                             builder: (context) {
                               return AlertDialog(
-                                  title:const Text('Error'),
+                                  title: const Text('Error'),
                                   content: const Text('Invalid Credentials'),
                                   actions: [
                                     Padding(
@@ -155,7 +163,7 @@ class _LoginCustomerState extends State<LoginCustomer> {
                       backgroundColor: Colors.amber,
                       foregroundColor: Colors.red[900],
                     ),
-                    child:const Text(
+                    child: const Text(
                       'Login',
                       style: TextStyle(
                         fontSize: 20,
@@ -175,7 +183,7 @@ class _LoginCustomerState extends State<LoginCustomer> {
                       backgroundColor: Colors.amber,
                       foregroundColor: Colors.red[900],
                     ),
-                    child:const Text(
+                    child: const Text(
                       'Forget Password',
                       style: TextStyle(
                         fontSize: 20,
@@ -193,8 +201,8 @@ class _LoginCustomerState extends State<LoginCustomer> {
 
             Row(
               children: [
-              const Padding(padding: EdgeInsets.symmetric(horizontal: 50)),
-              const Text(
+                const Padding(padding: EdgeInsets.symmetric(horizontal: 50)),
+                const Text(
                   'Not a User?',
                   style: TextStyle(
                     fontSize: 22,
@@ -210,9 +218,11 @@ class _LoginCustomerState extends State<LoginCustomer> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => Registration(onTap: widget.onTap,)));
+                            builder: (context) => Registration(
+                                  onTap: widget.onTap,
+                                )));
                   },
-                  child:const Text(
+                  child: const Text(
                     'Register',
                     style: TextStyle(
                       color: Colors.blue,
