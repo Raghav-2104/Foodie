@@ -78,8 +78,8 @@ class _CartState extends State<Cart> {
     return Column(
       children: [
         Expanded(
-          child: StreamBuilder<DocumentSnapshot>(
-            stream: docRef.snapshots(),
+          child: FutureBuilder<DocumentSnapshot>(
+            future: docRef.get(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return Center(
@@ -93,69 +93,79 @@ class _CartState extends State<Cart> {
                   return const Text('Cart is empty.');
                 }
                 total = snapshot.data?.get('total');
-                print(snapshot.data?.get('total'));
-                return ListView.builder(
-                  itemCount: cartItems.length,
-                  itemBuilder: (context, index) {
-                    // print(cartItems[index]);
-                    return Card(
-                      child: ListTile(
-                        title: Text(cartItems[index]['itemName']),
-                        subtitle: Text('₹' + cartItems[index]['itemPrice']),
-                        //add quantity stepper
-                        trailing: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            IconButton(
-                              icon: Icon(Icons.remove),
-                              onPressed: () {
-                                setState(() {
-                                  if (cartItems[index]['quantity'] > 1) {
-                                    cartItems[index]['quantity']--;
-                                    total = total -
-                                        int.parse(
-                                            cartItems[index]['itemPrice']);
-                                    docRef.update({
-                                      'itemList': cartItems,
-                                      'total': total
-                                    });
-                                  } else {
-                                    total = total -
-                                        int.parse(
-                                            cartItems[index]['itemPrice']);
-                                    cartItems.removeAt(index);
-                                    docRef.update({
-                                      'itemList': cartItems,
-                                      'total': total
-                                    });
-                                  }
-                                });
-                              },
+                print('Total=$total');
+                return Column(
+                  children: [
+                    Expanded(
+                      child: ListView.builder(
+                        itemCount: cartItems.length,
+                        itemBuilder: (context, index) {
+                          // print(cartItems[index]);
+                          return Card(
+                            child: ListTile(
+                              title: Text(cartItems[index]['itemName']),
+                              subtitle:
+                                  Text('₹' + cartItems[index]['itemPrice']),
+                              //add quantity stepper
+                              trailing: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  IconButton(
+                                    icon: Icon(Icons.remove),
+                                    onPressed: () {
+                                      setState(() {
+                                        if (cartItems[index]['quantity'] > 1) {
+                                          cartItems[index]['quantity']--;
+                                          total = total -
+                                              int.parse(cartItems[index]
+                                                  ['itemPrice']);
+                                          docRef.update({
+                                            'itemList': cartItems,
+                                            'total': total
+                                          });
+                                        } else {
+                                          total = total -
+                                              int.parse(cartItems[index]
+                                                  ['itemPrice']);
+                                          cartItems.removeAt(index);
+                                          docRef.update({
+                                            'itemList': cartItems,
+                                            'total': total
+                                          });
+                                        }
+                                      });
+                                    },
+                                  ),
+                                  Text(cartItems[index]['quantity'].toString()),
+                                  IconButton(
+                                    icon: Icon(Icons.add),
+                                    onPressed: () {
+                                      setState(() {
+                                        cartItems[index]['quantity']++;
+                                        total = total +
+                                            int.parse(
+                                                cartItems[index]['itemPrice']);
+                                        docRef.update({
+                                          'itemList': cartItems,
+                                          'total': total
+                                        });
+                                      });
+                                    },
+                                  ),
+                                ],
+                              ),
                             ),
-                            Text(cartItems[index]['quantity'].toString()),
-                            IconButton(
-                              icon: Icon(Icons.add),
-                              onPressed: () {
-                                setState(() {
-                                  cartItems[index]['quantity']++;
-                                  total = total +
-                                      int.parse(cartItems[index]['itemPrice']);
-                                  docRef.update(
-                                      {'itemList': cartItems, 'total': total});
-                                });
-                              },
-                            ),
-                          ],
-                        ),
+                          );
+                        },
                       ),
-                    );
-                  },
+                    ),
+                    Center(child: Text('Total=₹$total')),
+                  ],
                 );
               }
             },
           ),
         ),
-        Center(child: Text('Total=₹$total')),
         Center(
             child: TextButton(onPressed: order, child: Text('Proceed To Pay')))
       ],

@@ -11,12 +11,9 @@ class Menu extends StatefulWidget {
 }
 
 class _MenuState extends State<Menu> {
-  // static Set<String> selectedItems = Set<String>();
-  // static Set<String> selectedPrice = Set<String>();
-  // List<Map<String, dynamic>> temp = [];
+
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   FirebaseAuth _auth = FirebaseAuth.instance;
-  // int total = 0;
   List<Map<String, dynamic>> itemList = [];
   @override
   Widget build(BuildContext context) {
@@ -30,7 +27,6 @@ class _MenuState extends State<Menu> {
           } else if (snapshot.hasError) {
             return Text('Error:${snapshot.error}');
           } else {
-            bool isPresentInCart = false;
             return Column(
               children: [
                 Expanded(
@@ -40,9 +36,10 @@ class _MenuState extends State<Menu> {
                       var doc = snapshot.data?.docs[index];
                       var itemName = doc?['name'];
                       var itemPrice = doc?['price'];
+                      bool isPresentInCart = false;
 
                       return Card(
-                          child: ListTile(
+                        child: ListTile(
                         title: Text(doc?['name']),
                         subtitle: Text(doc?['price']),
                         trailing: ElevatedButton(
@@ -56,7 +53,7 @@ class _MenuState extends State<Menu> {
                               for (var item in itemList) {
                                 if (item['itemName'] == itemName) {
                                   // Item is already in the cart
-                                  isPresentInCart = true;
+                                  isPresentInCart =!isPresentInCart;
                                   break;
                                 }
                               }
@@ -64,7 +61,7 @@ class _MenuState extends State<Menu> {
                               if (isPresentInCart) {
                                 print('Item is already in the cart!');
                                 setState(() {
-                                  isPresentInCart = false;
+                                  isPresentInCart =!isPresentInCart;
                                 });
                                 total -= int.parse(itemPrice);
                                 itemList.removeWhere((element) =>
@@ -73,9 +70,8 @@ class _MenuState extends State<Menu> {
                                   'itemList':itemList,
                                   'total':total
                                 });
-                                print(itemList);
+                                // print(itemList);
                                 // print(cartSnapshot.data()?['itemList'][0]['itemName']);
-                                // Add your logic here for handling the presence of the item in the cart
                               } else {
                                 print(
                                     'Item is not in the cart. Add it to the cart!');
@@ -90,18 +86,13 @@ class _MenuState extends State<Menu> {
                                 total += int.parse(itemPrice);
                                 cart.update(
                                     {'itemList': itemList, 'total': total});
-                                // Add your logic here for handling the absence of the item in the cart
                               }
                             } else {
                               print('Cart document does not exist!');
-                              // Handle the case where the user's cart document does not exist
                             }
-                            print(
-                                'isPresentInCart' + isPresentInCart.toString());
+                            print('isPresentInCart' + isPresentInCart.toString());
                           },
-                          child: Icon(isPresentInCart == true
-                              ? Icons.remove
-                              : Icons.add),
+                          child:isPresentInCart==true?Icon(Icons.remove):Icon(Icons.add)
                         ),
                       ));
                     },
