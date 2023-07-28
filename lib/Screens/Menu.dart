@@ -13,9 +13,11 @@ class Menu extends StatefulWidget {
 class _MenuState extends State<Menu> {
   static Set<String> selectedItems = Set<String>();
   static Set<String> selectedPrice = Set<String>();
-  static List temp = [];
+  // List<Map<String, dynamic>> temp = [];
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   FirebaseAuth _auth = FirebaseAuth.instance;
+  static int total = 0;
+  List<Map<String, dynamic>> itemList = [];
   @override
   Widget build(BuildContext context) {
     var cart = firestore.collection('Cart').doc(_auth.currentUser?.email);
@@ -36,7 +38,6 @@ class _MenuState extends State<Menu> {
                   var itemName = doc?['name'];
                   var itemPrice = doc?['price'];
                   bool isAdded = selectedItems.contains(itemName);
-                  print(doc?.data());
                   return Card(
                       child: ListTile(
                     title: Text(doc?['name']),
@@ -44,23 +45,26 @@ class _MenuState extends State<Menu> {
                     trailing: ElevatedButton(
                       onPressed: () {
                         setState(() {
-                          if (isAdded) {
-                            temp = selectedItems.toList();
-                            int indexOfItem = temp.indexOf(itemName);
-                            selectedPrice.remove(snapshot.data?.docs[indexOfItem]['price']);
+                          if (selectedItems.contains(itemName)) {
                             selectedItems.remove(itemName);
-                            cart.set({'items': selectedItems,'prices':selectedPrice});
-                            // print(selectedItems);
-                            print(selectedPrice);
+                            selectedPrice.remove(itemPrice);
+                            itemList.retainWhere(
+                                (element) => element['itemName'] = itemName);
+                            total = total - int.parse(itemPrice);
                           } else {
                             selectedItems.add(itemName);
-                            temp = selectedItems.toList();
-                            int indexOfItem = temp.indexOf(itemName);
-                            selectedPrice.add(snapshot.data?.docs[indexOfItem]['price']);
-                            // print(selectedItems);
-                            print(selectedPrice);
-                            cart.set({'items': selectedItems,'prices':selectedPrice});
+                            selectedPrice.add(itemPrice);
+                            itemList.add({
+                              'itemName': itemName,
+                              'itemPrice': itemPrice,
+                              'quantity': 1
+                            });
+                            total = total + int.parse(itemPrice);
                           }
+                          cart.set({
+                            'itemList':itemList,
+                            'total': total,
+                          });
                         });
                       },
                       child: Icon(isAdded ? Icons.remove : Icons.add),

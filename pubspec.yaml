@@ -40,6 +40,7 @@ dependencies:
   google_nav_bar: ^5.0.6
   cloud_firestore: ^4.8.4
   cart_stepper: ^4.1.2
+  flutter_cart: ^0.0.8
 
 dev_dependencies:
   flutter_test:

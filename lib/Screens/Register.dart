@@ -235,9 +235,9 @@ class _RegistrationState extends State<Registration> {
 
                         // Create a new document in the "users" collection with the user's UID as the document ID
                         await usersCollection.doc(email).set({
-                          'name': name,
-                          'email': email,
-                          'phoneNumber': phoneNumber,
+                          'Name': name,
+                          'Email': email,
+                          'Phone Number': phoneNumber,
                           // Add other user details as needed
                         });
                       } catch (e) {
