@@ -2,6 +2,7 @@ import 'package:canteen/Screens/AddProduct.dart';
 import 'package:canteen/Screens/Cart.dart';
 import 'package:canteen/Screens/Login.dart';
 import 'package:canteen/Screens/Menu.dart';
+import 'package:canteen/Screens/Orders.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
@@ -25,7 +26,7 @@ class _HomeState extends State<Home> {
   }
   final FirebaseAuth _auth = FirebaseAuth.instance;
   int index = 0;
-  List<Widget> pages = [Menu(), Cart(), Profile(), AdminPage()];
+  List<Widget> pages = [Menu(), Cart(), Profile(),OrderPage(),AdminPage()];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -61,6 +62,7 @@ class _HomeState extends State<Home> {
                 const GButton(icon: (Icons.menu), text: 'Menu'),
                 const GButton(icon: (Icons.shopping_cart), text: 'Cart'),
                 const GButton(icon: (Icons.person), text: 'Profile'),
+                const GButton(icon: (Icons.request_page_outlined), text: 'Your Orders'),
                 if (_auth.currentUser?.email == 'test@ves.ac.in')
                   const GButton(icon: (Icons.edit), text: 'Edit Menu'),
               ],

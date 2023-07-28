@@ -240,6 +240,12 @@ class _RegistrationState extends State<Registration> {
                           'Phone Number': phoneNumber,
                           // Add other user details as needed
                         });
+                        await FirebaseFirestore.instance
+                              .collection('InvoiceNumber')
+                              .doc(email)
+                              .collection('OrderNums')
+                              .doc('currentNumber')
+                              .set({'number': 0});
                       } catch (e) {
                         print('Error adding user details to Firestore: $e');
                         // Handle the error appropriately

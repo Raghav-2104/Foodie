@@ -129,7 +129,7 @@ class _LoginCustomerState extends State<LoginCustomer> {
                           FirebaseFirestore.instance
                               .collection('Cart')
                               .doc(auth.currentUser?.email)
-                              .set({'itemList':[],'total': 0});
+                              .set({'itemList': [], 'total': 0});
                           Navigator.push(context,
                               MaterialPageRoute(builder: (context) => Home()));
                         } else {
