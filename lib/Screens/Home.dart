@@ -1,5 +1,6 @@
 import 'package:canteen/Screens/AddProduct.dart';
 import 'package:canteen/Screens/Cart.dart';
+import 'package:canteen/Screens/Login.dart';
 import 'package:canteen/Screens/Menu.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -15,9 +16,16 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  bool isLogin = true;
+
+  void toggleScreen() {
+    setState(() {
+      isLogin = !isLogin;
+    });
+  }
   final FirebaseAuth _auth = FirebaseAuth.instance;
   int index = 0;
-  List<Widget> pages = [Menu(), Cart(), Profile(),AdminPage()];
+  List<Widget> pages = [Menu(), Cart(), Profile(), AdminPage()];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,8 +33,10 @@ class _HomeState extends State<Home> {
           title: const Text('VES Canteen'),
           actions: [
             IconButton(
-              onPressed: () async {
-                await _auth.signOut();
+              onPressed: () {
+                _auth.signOut();
+                Navigator.pushReplacement(
+                    context, MaterialPageRoute(builder: (context) => LoginCustomer(onTap:toggleScreen ,)));
               },
               icon: const Icon(Icons.logout),
             )
@@ -47,12 +57,12 @@ class _HomeState extends State<Home> {
                 });
               },
               padding: const EdgeInsets.all(8),
-              tabs:  [
+              tabs: [
                 const GButton(icon: (Icons.menu), text: 'Menu'),
                 const GButton(icon: (Icons.shopping_cart), text: 'Cart'),
                 const GButton(icon: (Icons.person), text: 'Profile'),
-                if(_auth.currentUser?.email=='test@ves.ac.in') const GButton(icon: (Icons.edit), text: 'Edit Menu'),
-                
+                if (_auth.currentUser?.email == 'test@ves.ac.in')
+                  const GButton(icon: (Icons.edit), text: 'Edit Menu'),
               ],
               color: Colors.white,
               activeColor: Colors.red,
