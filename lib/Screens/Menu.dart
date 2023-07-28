@@ -48,8 +48,8 @@ class _MenuState extends State<Menu> {
                           if (selectedItems.contains(itemName)) {
                             selectedItems.remove(itemName);
                             selectedPrice.remove(itemPrice);
-                            itemList.retainWhere(
-                                (element) => element['itemName'] = itemName);
+                            itemList.removeWhere(
+                                (element) => element['itemName'] == itemName);
                             total = total - int.parse(itemPrice);
                           } else {
                             selectedItems.add(itemName);
