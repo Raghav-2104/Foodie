@@ -92,8 +92,8 @@ class _CartState extends State<Cart> {
                 if (cartItems.isEmpty) {
                   return const Text('Cart is empty.');
                 }
-                // print(snapshot.data?.get('total'));
                 total = snapshot.data?.get('total');
+                print(snapshot.data?.get('total'));
                 return ListView.builder(
                   itemCount: cartItems.length,
                   itemBuilder: (context, index) {

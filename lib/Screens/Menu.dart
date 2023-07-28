@@ -11,12 +11,12 @@ class Menu extends StatefulWidget {
 }
 
 class _MenuState extends State<Menu> {
-  static Set<String> selectedItems = Set<String>();
-  static Set<String> selectedPrice = Set<String>();
+  // static Set<String> selectedItems = Set<String>();
+  // static Set<String> selectedPrice = Set<String>();
   // List<Map<String, dynamic>> temp = [];
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   FirebaseAuth _auth = FirebaseAuth.instance;
-  static int total = 0;
+  // int total = 0;
   List<Map<String, dynamic>> itemList = [];
   @override
   Widget build(BuildContext context) {
@@ -30,6 +30,7 @@ class _MenuState extends State<Menu> {
           } else if (snapshot.hasError) {
             return Text('Error:${snapshot.error}');
           } else {
+            bool isPresentInCart = false;
             return Column(
               children: [
                 Expanded(
@@ -39,37 +40,68 @@ class _MenuState extends State<Menu> {
                       var doc = snapshot.data?.docs[index];
                       var itemName = doc?['name'];
                       var itemPrice = doc?['price'];
-                      bool isAdded = selectedItems.contains(itemName);
+
                       return Card(
                           child: ListTile(
                         title: Text(doc?['name']),
                         subtitle: Text(doc?['price']),
                         trailing: ElevatedButton(
-                          onPressed: () {
-                            setState(() {
-                              if (selectedItems.contains(itemName)) {
-                                selectedItems.remove(itemName);
-                                selectedPrice.remove(itemPrice);
-                                itemList.removeWhere(
-                                    (element) => element['itemName'] == itemName);
-                                total = total - int.parse(itemPrice);
+                          onPressed: () async {
+                            var cartSnapshot = await cart.get();
+                            if (cartSnapshot.exists) {
+                              var itemList = cartSnapshot.data()?['itemList']
+                                  as List<dynamic>;
+                              int total = cartSnapshot.data()?['total'];
+
+                              for (var item in itemList) {
+                                if (item['itemName'] == itemName) {
+                                  // Item is already in the cart
+                                  isPresentInCart = true;
+                                  break;
+                                }
+                              }
+
+                              if (isPresentInCart) {
+                                print('Item is already in the cart!');
+                                setState(() {
+                                  isPresentInCart = false;
+                                });
+                                total -= int.parse(itemPrice);
+                                itemList.removeWhere((element) =>
+                                    element['itemName'] == itemName);
+                                cart.update({
+                                  'itemList':itemList,
+                                  'total':total
+                                });
+                                print(itemList);
+                                // print(cartSnapshot.data()?['itemList'][0]['itemName']);
+                                // Add your logic here for handling the presence of the item in the cart
                               } else {
-                                selectedItems.add(itemName);
-                                selectedPrice.add(itemPrice);
+                                print(
+                                    'Item is not in the cart. Add it to the cart!');
+                                setState(() {
+                                  isPresentInCart = true;
+                                });
                                 itemList.add({
                                   'itemName': itemName,
                                   'itemPrice': itemPrice,
                                   'quantity': 1
                                 });
-                                total = total + int.parse(itemPrice);
+                                total += int.parse(itemPrice);
+                                cart.update(
+                                    {'itemList': itemList, 'total': total});
+                                // Add your logic here for handling the absence of the item in the cart
                               }
-                              cart.set({
-                                'itemList':itemList,
-                                'total': total,
-                              });
-                            });
+                            } else {
+                              print('Cart document does not exist!');
+                              // Handle the case where the user's cart document does not exist
+                            }
+                            print(
+                                'isPresentInCart' + isPresentInCart.toString());
                           },
-                          child: Icon(isAdded ? Icons.remove : Icons.add),
+                          child: Icon(isPresentInCart == true
+                              ? Icons.remove
+                              : Icons.add),
                         ),
                       ));
                     },
