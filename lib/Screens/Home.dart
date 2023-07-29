@@ -30,8 +30,9 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey[200],
         appBar: AppBar(
-          title: const Text('VES Canteen'),
+          title: const Text('Food Order'),
           actions: [
             IconButton(
               onPressed: () {

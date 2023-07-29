@@ -1,3 +1,5 @@
+
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -17,7 +19,6 @@ class _OrderPageState extends State<OrderPage> {
     return Container(
         child: Column(
       children: [
-        const Text('Your Orders'),
         Expanded(
           child: StreamBuilder<QuerySnapshot>(
             stream: FirebaseFirestore.instance
@@ -32,6 +33,10 @@ class _OrderPageState extends State<OrderPage> {
                 );
               } else if (snapshot.hasError) {
                 return Text("Error:${snapshot.error}");
+              } else if (!snapshot.hasData) {
+                return Center(
+                  child: Text("No Orders Yet"),
+                );
               } else {
                 final invoiceDocs = snapshot.data!.docs;
                 for (var invoiceDoc in invoiceDocs) {
@@ -51,7 +56,8 @@ class _OrderPageState extends State<OrderPage> {
                     return ExpansionTile(
                       title: Text(invoiceDocs[index].id),
                       children: [
-                        Text('Order Date:  ${data['TimeStamp'].toString().substring(0,16)}'),
+                        Text(
+                            'Order Date:  ${data['TimeStamp'].toString().substring(0, 16)}'),
                         Text('Total Amount: ₹${data['total']}'),
                         Column(
                           children: List.generate(data['itemList'].length,

@@ -23,7 +23,8 @@ class _ProfileState extends State<Profile> {
 
     return FutureBuilder<DocumentSnapshot>(
       future: docRef.get(),
-      builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+      builder:
+          (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return CircularProgressIndicator();
         }
@@ -52,7 +53,7 @@ class _ProfileState extends State<Profile> {
                 },
               ),
               Card(
-                color: Colors.grey[200],
+                // color: Colors.grey[200],
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
                 ),
@@ -68,8 +69,9 @@ class _ProfileState extends State<Profile> {
                     userData!['Email'],
                     style: const TextStyle(
                         fontWeight: FontWeight.bold,
-                        fontSize: 22,
-                        color: Colors.black),
+                        fontSize: 20,
+                        color: Colors.black,
+                        letterSpacing: 1),
                   ),
                 ),
               ),

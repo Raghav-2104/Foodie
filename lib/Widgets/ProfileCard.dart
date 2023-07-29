@@ -25,7 +25,7 @@ class _ProfileCardState extends State<ProfileCard> {
   @override
   Widget build(BuildContext context) {
     return Card(
-      color: Colors.grey[200],
+      // color: Colors.grey[200],
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
       ),
@@ -33,6 +33,7 @@ class _ProfileCardState extends State<ProfileCard> {
         title: Text(
           "${widget.title} :",
           style: const TextStyle(
+            fontFamily: 'Times New Roman',
             fontWeight: FontWeight.bold,
             fontSize: 18,
             color: Colors.blueGrey,
@@ -42,8 +43,9 @@ class _ProfileCardState extends State<ProfileCard> {
           widget.data,
           style: const TextStyle(
             fontWeight: FontWeight.bold,
-            fontSize: 22,
+            fontSize: 20,
             color: Colors.black,
+            letterSpacing: 1
           ),
         ),
         trailing: IconButton(

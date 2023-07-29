@@ -1,9 +1,8 @@
 import 'package:canteen/Screens/Orders.dart';
-import 'package:canteen/Widgets/PopUpBox.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class Cart extends StatefulWidget {
   const Cart({super.key});
@@ -67,7 +66,7 @@ class _CartState extends State<Cart> {
     }
     // Navigator.push(
     //     context, MaterialPageRoute(builder: (context) => OrderPage()));
-    PopUpBox('Payment Successful', 'Payment', press);
+    Fluttertoast.showToast(msg: 'Order Created Successfully');
   }
 
   @override
@@ -82,7 +81,7 @@ class _CartState extends State<Cart> {
             future: docRef.get(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return Center(
+                return const Center(
                   child: CircularProgressIndicator(),
                 );
               } else if (snapshot.hasError) {
@@ -90,7 +89,17 @@ class _CartState extends State<Cart> {
               } else {
                 List cartItems = snapshot.data?.get('itemList');
                 if (cartItems.isEmpty) {
-                  return const Text('Cart is empty.');
+                  return const Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Center(
+                      child: Text(
+                        'Delicious Food Is Waiting To Enter In Your Cart 😍',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontFamily: 'Times New Roman', fontSize: 20),
+                      ),
+                    ),
+                  );
                 }
                 total = snapshot.data?.get('total');
                 print('Total=$total');
@@ -103,15 +112,32 @@ class _CartState extends State<Cart> {
                           // print(cartItems[index]);
                           return Card(
                             child: ListTile(
-                              title: Text(cartItems[index]['itemName']),
-                              subtitle:
-                                  Text('₹' + cartItems[index]['itemPrice']),
+                              title: Text(
+                                cartItems[index]['itemName'],
+                                style: const TextStyle(
+                                    fontFamily: 'Times New Roman',
+                                    fontSize: 20,
+                                    fontStyle: FontStyle.normal,
+                                    fontWeight: FontWeight.w500),
+                              ),
+                              subtitle: Text(
+                                '₹ ${cartItems[index]['itemPrice']}',
+                                style: const TextStyle(
+                                    fontFamily: 'Times New Roman',
+                                    fontSize: 16,
+                                    fontStyle: FontStyle.normal,
+                                    fontWeight: FontWeight.w300,
+                                    color: Colors.black54),
+                              ),
                               //add quantity stepper
                               trailing: Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   IconButton(
-                                    icon: Icon(Icons.remove),
+                                    icon: const Icon(
+                                      Icons.remove,
+                                      color: Colors.red,
+                                    ),
                                     onPressed: () {
                                       setState(() {
                                         if (cartItems[index]['quantity'] > 1) {
@@ -136,9 +162,15 @@ class _CartState extends State<Cart> {
                                       });
                                     },
                                   ),
-                                  Text(cartItems[index]['quantity'].toString()),
+                                  Text(
+                                    cartItems[index]['quantity'].toString(),
+                                    style: const TextStyle(fontSize: 18),
+                                  ),
                                   IconButton(
-                                    icon: Icon(Icons.add),
+                                    icon: const Icon(
+                                      Icons.add,
+                                      color: Colors.green,
+                                    ),
                                     onPressed: () {
                                       setState(() {
                                         cartItems[index]['quantity']++;
@@ -159,15 +191,36 @@ class _CartState extends State<Cart> {
                         },
                       ),
                     ),
-                    Center(child: Text('Total=₹$total')),
+                    Center(
+                        child: Text(
+                      'Total=₹$total',
+                      style: const TextStyle(
+                          fontFamily: 'Times New Roman',
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                          letterSpacing: 2),
+                    )),
+                    Center(
+                        child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.black),
+                            onPressed: order,
+                            child: const Text(
+                              'Proceed To Pay',
+                              style: TextStyle(
+                                fontFamily: 'Times New Roman',
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                                letterSpacing: 1.5,
+                                // color: Colors.red
+                              ),
+                            )))
                   ],
                 );
               }
             },
           ),
         ),
-        Center(
-            child: TextButton(onPressed: order, child: Text('Proceed To Pay')))
       ],
     );
   }

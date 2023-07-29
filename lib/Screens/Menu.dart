@@ -11,7 +11,6 @@ class Menu extends StatefulWidget {
 }
 
 class _MenuState extends State<Menu> {
-
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   FirebaseAuth _auth = FirebaseAuth.instance;
   List<Map<String, dynamic>> itemList = [];
@@ -23,9 +22,11 @@ class _MenuState extends State<Menu> {
         stream: FirebaseFirestore.instance.collection('Menu').snapshots(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
-            return Text('Error:${snapshot.error}');
+            return const Center(
+                child: Text(
+                    'There is an issue with server \n Please try again Later'));
           } else {
             return Column(
               children: [
@@ -39,61 +40,84 @@ class _MenuState extends State<Menu> {
                       bool isPresentInCart = false;
 
                       return Card(
-                        child: ListTile(
-                        title: Text(doc?['name']),
-                        subtitle: Text(doc?['price']),
-                        trailing: ElevatedButton(
-                          onPressed: () async {
-                            var cartSnapshot = await cart.get();
-                            if (cartSnapshot.exists) {
-                              var itemList = cartSnapshot.data()?['itemList']
-                                  as List<dynamic>;
-                              int total = cartSnapshot.data()?['total'];
-
-                              for (var item in itemList) {
-                                if (item['itemName'] == itemName) {
-                                  // Item is already in the cart
-                                  isPresentInCart =!isPresentInCart;
-                                  break;
-                                }
-                              }
-
-                              if (isPresentInCart) {
-                                print('Item is already in the cart!');
-                                setState(() {
-                                  isPresentInCart =!isPresentInCart;
-                                });
-                                total -= int.parse(itemPrice);
-                                itemList.removeWhere((element) =>
-                                    element['itemName'] == itemName);
-                                cart.update({
-                                  'itemList':itemList,
-                                  'total':total
-                                });
-                                // print(itemList);
-                                // print(cartSnapshot.data()?['itemList'][0]['itemName']);
-                              } else {
-                                print(
-                                    'Item is not in the cart. Add it to the cart!');
-                                setState(() {
-                                  isPresentInCart = true;
-                                });
-                                itemList.add({
-                                  'itemName': itemName,
-                                  'itemPrice': itemPrice,
-                                  'quantity': 1
-                                });
-                                total += int.parse(itemPrice);
-                                cart.update(
-                                    {'itemList': itemList, 'total': total});
-                              }
-                            } else {
-                              print('Cart document does not exist!');
-                            }
-                            print('isPresentInCart' + isPresentInCart.toString());
-                          },
-                          child:isPresentInCart==true?Icon(Icons.remove):Icon(Icons.add)
+                          child: ListTile(
+                        title: Text(
+                          doc?['name'],
+                          style: const TextStyle(
+                              fontFamily: 'Times New Roman',
+                              fontSize: 20,
+                              fontStyle: FontStyle.normal,
+                              fontWeight: FontWeight.w500),
                         ),
+                        subtitle: Text(
+                          '₹${doc?['price']}',
+                          style: const TextStyle(
+                              fontFamily: 'Times New Roman',
+                              fontSize: 16,
+                              fontStyle: FontStyle.normal,
+                              fontWeight: FontWeight.w300,
+                              color: Colors.black54),
+                        ),
+                        trailing: ElevatedButton(
+                            style: const ButtonStyle(
+                                backgroundColor:
+                                    MaterialStatePropertyAll<Color>(
+                                        Colors.black),
+                                foregroundColor:
+                                    MaterialStatePropertyAll<Color>(
+                                        Colors.white),
+                                overlayColor: MaterialStatePropertyAll<Color>(
+                                    Colors.red)),
+                            onPressed: () async {
+                              var cartSnapshot = await cart.get();
+                              if (cartSnapshot.exists) {
+                                var itemList = cartSnapshot.data()?['itemList']
+                                    as List<dynamic>;
+                                int total = cartSnapshot.data()?['total'];
+
+                                for (var item in itemList) {
+                                  if (item['itemName'] == itemName) {
+                                    // Item is already in the cart
+                                    isPresentInCart = !isPresentInCart;
+                                    break;
+                                  }
+                                }
+
+                                if (isPresentInCart) {
+                                  // print('Item is already in the cart!');
+                                  // setState(() {
+                                  isPresentInCart = !isPresentInCart;
+                                  // });
+                                  total -= int.parse(itemPrice);
+                                  itemList.removeWhere((element) =>
+                                      element['itemName'] == itemName);
+                                  cart.update(
+                                      {'itemList': itemList, 'total': total});
+                                  // print(itemList);
+                                  // print(cartSnapshot.data()?['itemList'][0]['itemName']);
+                                } else {
+                                  // print(
+                                  // 'Item is not in the cart. Add it to the cart!');
+                                  // setState(() {
+                                  isPresentInCart = true;
+                                  // });
+                                  itemList.add({
+                                    'itemName': itemName,
+                                    'itemPrice': itemPrice,
+                                    'quantity': 1
+                                  });
+                                  total += int.parse(itemPrice);
+                                  cart.update(
+                                      {'itemList': itemList, 'total': total});
+                                }
+                              } else {
+                                print('Cart document does not exist!');
+                              }
+                              print('isPresentInCart' + isPresentInCart.toString());
+                            },
+                            child: isPresentInCart == true
+                                ? Text('Remove')
+                                : Text('Add')),
                       ));
                     },
                   ),
