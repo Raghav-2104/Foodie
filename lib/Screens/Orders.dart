@@ -1,5 +1,3 @@
-
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -34,7 +32,7 @@ class _OrderPageState extends State<OrderPage> {
               } else if (snapshot.hasError) {
                 return Text("Error:${snapshot.error}");
               } else if (!snapshot.hasData) {
-                return Center(
+                return const Center(
                   child: Text("No Orders Yet"),
                 );
               } else {
@@ -53,30 +51,73 @@ class _OrderPageState extends State<OrderPage> {
                   itemBuilder: (context, index) {
                     Map<String, dynamic> data =
                         invoiceDocs[index].data() as Map<String, dynamic>;
-                    return ExpansionTile(
-                      title: Text(invoiceDocs[index].id),
-                      children: [
-                        Text(
-                            'Order Date:  ${data['TimeStamp'].toString().substring(0, 16)}'),
-                        Text('Total Amount: ₹${data['total']}'),
-                        Column(
-                          children: List.generate(data['itemList'].length,
-                              (itemIndex) {
-                            return Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Padding(
-                                    padding: const EdgeInsets.only(left: 16),
-                                    child: Text(data['itemList'][itemIndex]
-                                            ['itemName']
-                                        .toString())),
-                                Text(
-                                    ':${data['itemList'][itemIndex]['quantity']}'),
-                              ],
-                            );
-                          }),
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 5, horizontal: 5),
+                      child: ExpansionTile(
+                        textColor: Colors.blue,
+                        collapsedTextColor: Colors.black,
+                        initiallyExpanded: true,
+                        shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(8))),
+                        collapsedShape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(8))),
+                        backgroundColor: Colors.grey[300],
+                        collapsedBackgroundColor: Colors.grey[300],
+                        title: Text(
+                          invoiceDocs[index].id,
+                          style: const TextStyle(
+                            fontFamily: 'Times New Roman',
+                            letterSpacing: 1
+                          ),
                         ),
-                      ],
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              'Order Date:  ${data['TimeStamp'].toString().substring(0, 16)}',
+                              style: const TextStyle(
+                                  fontSize: 18, fontFamily: 'Times New Roman'),
+                            ),
+                          ),
+                          Text(
+                            'Total Amount: ₹ ${data['total']}',
+                            style: const TextStyle(
+                                fontSize: 18, fontFamily: 'Times New Roman'),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Column(
+                              children: List.generate(data['itemList'].length,
+                                  (itemIndex) {
+                                return Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 16, right: 5,top: 5,bottom: 5),
+                                        child: Text(
+                                          '${data['itemList'][itemIndex]['itemName']}  :',
+                                          style: const TextStyle(
+                                              fontSize: 18,
+                                              fontFamily: 'Times New Roman'),
+                                        )),
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(vertical: 5),
+                                      child: Text(
+                                        '${data['itemList'][itemIndex]['quantity']}',
+                                        style: const TextStyle(
+                                            fontSize: 18,
+                                            fontFamily: 'Times New Roman'),
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              }),
+                            ),
+                          ),
+                        ],
+                      ),
                     );
                   },
                 );

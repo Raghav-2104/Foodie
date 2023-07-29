@@ -22,25 +22,31 @@ class _LoginCustomerState extends State<LoginCustomer> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[100],
+      backgroundColor: Colors.grey[200],
       appBar: AppBar(
-        title: Text(
-          'VESIT Canteen',
+        title: const Text(
+          'Foodie',
           style: TextStyle(
-            color: Colors.red[900],
+            color: Colors.red,
             fontSize: 30,
             fontWeight: FontWeight.bold,
-            letterSpacing: 1.5,
+            letterSpacing: 1,
+            fontFamily: 'Times New Roman'
           ),
         ),
         elevation: 3.0,
-        backgroundColor: Colors.amber,
+        backgroundColor: Colors.black,
         centerTitle: true,
       ),
       body: Form(
         key: _formKey,
         child: Column(
           children: [
+            const SizedBox(height: 20,),
+            const CircleAvatar(
+              backgroundImage: AssetImage('assets/logo2.png'),
+              radius: 125,
+            ),
             const SizedBox(
               height: 20,
             ),
@@ -64,9 +70,8 @@ class _LoginCustomerState extends State<LoginCustomer> {
                 decoration: InputDecoration(
                   border: const OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(15)),
-                    borderSide: BorderSide(color: Colors.amber),
                   ),
-                  fillColor: Colors.grey[200],
+                  fillColor: Colors.grey[50],
                   filled: true,
                   hintText: 'Email',
                   prefixIcon: const Icon(Icons.email_outlined),
@@ -86,9 +91,8 @@ class _LoginCustomerState extends State<LoginCustomer> {
                 decoration: InputDecoration(
                   border: const OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(15)),
-                    borderSide: BorderSide(color: Colors.amber),
                   ),
-                  fillColor: Colors.grey[200],
+                  fillColor: Colors.grey[50],
                   filled: true,
                   hintText: 'Password',
                   prefixIcon: const Icon(
@@ -160,8 +164,8 @@ class _LoginCustomerState extends State<LoginCustomer> {
                       }
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.amber,
-                      foregroundColor: Colors.red[900],
+                      backgroundColor: Colors.black,
+                      foregroundColor: Colors.white,
                     ),
                     child: const Text(
                       'Login',
@@ -180,8 +184,8 @@ class _LoginCustomerState extends State<LoginCustomer> {
                   ElevatedButton(
                     onPressed: () {},
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.amber,
-                      foregroundColor: Colors.red[900],
+                      backgroundColor: Colors.black,
+                      foregroundColor: Colors.white,
                     ),
                     child: const Text(
                       'Forget Password',
@@ -225,7 +229,7 @@ class _LoginCustomerState extends State<LoginCustomer> {
                   child: const Text(
                     'Register',
                     style: TextStyle(
-                      color: Colors.blue,
+                      color: Colors.red,
                       fontSize: 22,
                       fontWeight: FontWeight.w700,
                     ),

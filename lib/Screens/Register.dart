@@ -21,7 +21,9 @@ class _RegistrationState extends State<Registration> {
   String phoneNumber = '';
   String password = '';
   String confirm = '';
+  bool isLoading = false;
   void pressed() {
+    Navigator.pop(context);
     Navigator.pop(context);
     Navigator.push(
         context,
@@ -35,18 +37,18 @@ class _RegistrationState extends State<Registration> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.amber,
-        title: Text(
+        backgroundColor: Colors.black,
+        title: const Text(
           'Registration',
           style: TextStyle(
             fontSize: 20,
-            color: Colors.red[900],
+            color: Colors.white,
             letterSpacing: 1,
           ),
         ),
         centerTitle: true,
       ),
-      body: Form(
+      body:isLoading?const Center(child: CircularProgressIndicator(),): Form(
         key: _formKey,
         child: Column(
           children: [
@@ -96,13 +98,13 @@ class _RegistrationState extends State<Registration> {
                   ),
                   filled: true,
                   fillColor: Colors.grey[300],
-                  hintText: 'VES Email',
+                  hintText: 'Email',
                 ),
                 enableSuggestions: true,
                 keyboardType: TextInputType.emailAddress,
                 validator: (value) {
-                  if (email.isEmpty || !email.contains('@ves.ac.in')) {
-                    return 'Enter your VES email';
+                  if (email.isEmpty || !email.contains('@')) {
+                    return 'Enter your Email';
                   } else {
                     return null;
                   }
@@ -224,6 +226,11 @@ class _RegistrationState extends State<Registration> {
             ElevatedButton(
                 onPressed: () async {
                   if (_formKey.currentState!.validate()) {
+                    if (isLoading) {
+                      setState(() {
+                        isLoading = true;
+                      });
+                    }
                     dynamic result = await _auth.registerWithEmailAndPassword(
                         email, password);
                     if (result != null) {
@@ -241,15 +248,18 @@ class _RegistrationState extends State<Registration> {
                           // Add other user details as needed
                         });
                         await FirebaseFirestore.instance
-                              .collection('InvoiceNumber')
-                              .doc(email)
-                              .collection('OrderNums')
-                              .doc('currentNumber')
-                              .set({'number': 0});
+                            .collection('InvoiceNumber')
+                            .doc(email)
+                            .collection('OrderNums')
+                            .doc('currentNumber')
+                            .set({'number': 0});
                       } catch (e) {
-                        print('Error adding user details to Firestore: $e');
+                        print('Error adding user details to Database: $e');
                         // Handle the error appropriately
                       }
+                      setState(() {
+                        isLoading = false;
+                      });
                       // ignore: use_build_context_synchronously
                       showDialog(
                           context: context,
@@ -263,8 +273,8 @@ class _RegistrationState extends State<Registration> {
                   }
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.amber,
-                  foregroundColor: Colors.red[900],
+                  backgroundColor: Colors.black,
+                  foregroundColor: Colors.white,
                 ),
                 child: const Text('Register'))
           ],

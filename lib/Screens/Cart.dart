@@ -55,7 +55,7 @@ class _CartState extends State<Cart> {
           .doc(_auth.currentUser?.email)
           .collection('Invoice')
           .doc(
-              'Order$transactionResult') // Use the incremented number as the document ID
+              'Order: $transactionResult') // Use the incremented number as the document ID
           .set({
         'total': cart['total'],
         'itemList': cart['itemList'],
