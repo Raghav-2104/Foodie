@@ -66,7 +66,8 @@ class _CartState extends State<Cart> {
     }
     // Navigator.push(
     //     context, MaterialPageRoute(builder: (context) => OrderPage()));
-    Fluttertoast.showToast(msg: 'Order Created Successfully');
+    Fluttertoast.showToast(msg: 'Order Created Successfully',
+    );
   }
 
   @override
