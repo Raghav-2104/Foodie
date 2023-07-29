@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:canteen/Authentication/auth.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'Home.dart';
 import 'Register.dart';
 
@@ -27,12 +28,11 @@ class _LoginCustomerState extends State<LoginCustomer> {
         title: const Text(
           'Foodie',
           style: TextStyle(
-            color: Colors.red,
-            fontSize: 30,
-            fontWeight: FontWeight.bold,
-            letterSpacing: 1,
-            fontFamily: 'Times New Roman'
-          ),
+              color: Colors.red,
+              fontSize: 30,
+              fontWeight: FontWeight.bold,
+              letterSpacing: 1,
+              fontFamily: 'Times New Roman'),
         ),
         elevation: 3.0,
         backgroundColor: Colors.black,
@@ -42,7 +42,9 @@ class _LoginCustomerState extends State<LoginCustomer> {
         key: _formKey,
         child: Column(
           children: [
-            const SizedBox(height: 20,),
+            const SizedBox(
+              height: 20,
+            ),
             const CircleAvatar(
               backgroundImage: AssetImage('assets/logo2.png'),
               radius: 125,
@@ -182,7 +184,9 @@ class _LoginCustomerState extends State<LoginCustomer> {
                   //Forget Password Button
 
                   ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Fluttertoast.showToast(msg: 'Feature Implementing Soon');
+                    },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.black,
                       foregroundColor: Colors.white,
