@@ -33,7 +33,7 @@ class _OrderPageState extends State<OrderPage> {
                 return Text("Error:${snapshot.error}");
               } else if (!snapshot.hasData) {
                 return const Center(
-                  child: Text("No Orders Yet"),
+                  child: Text("No Data Found"),
                 );
               } else {
                 final invoiceDocs = snapshot.data!.docs;
@@ -57,7 +57,6 @@ class _OrderPageState extends State<OrderPage> {
                       child: ExpansionTile(
                         textColor: Colors.blue,
                         collapsedTextColor: Colors.black,
-                        initiallyExpanded: true,
                         shape: const RoundedRectangleBorder(
                             borderRadius: BorderRadius.all(Radius.circular(8))),
                         collapsedShape: const RoundedRectangleBorder(
