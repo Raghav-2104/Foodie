@@ -21,6 +21,7 @@ class _MenuState extends State<Menu> {
       child: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance.collection('Menu').snapshots(),
         builder: (context, snapshot) {
+          bool isPresentInCart = false;
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
@@ -37,8 +38,7 @@ class _MenuState extends State<Menu> {
                       var doc = snapshot.data?.docs[index];
                       var itemName = doc?['name'];
                       var itemPrice = doc?['price'];
-                      bool isPresentInCart = false;
-
+                      var temp = 'Add';
                       return Card(
                           child: ListTile(
                         title: Text(
@@ -85,9 +85,14 @@ class _MenuState extends State<Menu> {
 
                                 if (isPresentInCart) {
                                   // print('Item is already in the cart!');
-                                  // setState(() {
-                                  isPresentInCart = !isPresentInCart;
-                                  // });
+                                  setState(() {
+                                    print('isPresentInCart' +
+                                        isPresentInCart.toString());
+                                    isPresentInCart = !isPresentInCart;
+                                    print(temp);
+                                    temp = 'Remove';
+                                    print(temp);
+                                  });
                                   total -= int.parse(itemPrice);
                                   itemList.removeWhere((element) =>
                                       element['itemName'] == itemName);
@@ -98,9 +103,14 @@ class _MenuState extends State<Menu> {
                                 } else {
                                   // print(
                                   // 'Item is not in the cart. Add it to the cart!');
-                                  // setState(() {
-                                  isPresentInCart = true;
-                                  // });
+                                  setState(() {
+                                    print('isPresentInCart' +
+                                        isPresentInCart.toString());
+                                    isPresentInCart = !isPresentInCart;
+                                    print(temp);
+                                    temp = 'Add';
+                                    print(temp);
+                                  });
                                   itemList.add({
                                     'itemName': itemName,
                                     'itemPrice': itemPrice,
@@ -113,11 +123,8 @@ class _MenuState extends State<Menu> {
                               } else {
                                 print('Cart document does not exist!');
                               }
-                              print('isPresentInCart' + isPresentInCart.toString());
                             },
-                            child: isPresentInCart == true
-                                ? Text('Remove')
-                                : Text('Add')),
+                            child: Text(temp)),
                       ));
                     },
                   ),
