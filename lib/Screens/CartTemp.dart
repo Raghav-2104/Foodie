@@ -27,6 +27,13 @@ class _CartTempState extends State<CartTemp> {
                   return ListTile(
                     title: Text(value.getCartList[index]['name']),
                     subtitle: Text('₹${value.getCartList[index]['price']}'),
+                    trailing: IconButton(
+                      onPressed: () {
+                        Provider.of<MenuProvider>(context,listen: false).deleteFromCart(
+                            index);
+                      },
+                      icon: const Icon(Icons.delete),
+                    ),
                   );
                 },
               ),

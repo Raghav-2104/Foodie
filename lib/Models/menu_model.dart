@@ -54,13 +54,13 @@ class MenuProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void deleteFromCart(String name, int price) async {
-    cartList.remove({'name': name, 'price': price});
+  void deleteFromCart(int index){
+    cartList.removeAt(index);
     FirebaseFirestore firestore = FirebaseFirestore.instance;
     firestore
         .collection('Cart')
         .doc(FirebaseAuth.instance.currentUser!.email)
-        .set({'itemList': cartList});
+        .update({'itemList': cartList});
     notifyListeners();
   }
 
@@ -76,7 +76,7 @@ class MenuProvider extends ChangeNotifier {
     for (var doc in snapshot['itemList']) {
       cartList.add({'name': doc['itemName'], 'price': doc['itemPrice']});
     }
-    
+
     notifyListeners();
   }
 
