@@ -2,11 +2,13 @@ import 'package:canteen/Screens/AddProduct.dart';
 import 'package:canteen/Screens/Cart.dart';
 import 'package:canteen/Screens/Login.dart';
 import 'package:canteen/Screens/Menu.dart';
+import 'package:canteen/Screens/Menutemp.dart';
 import 'package:canteen/Screens/Orders.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 
+import 'CartTemp.dart';
 import 'Profile.dart';
 
 class Home extends StatefulWidget {
@@ -26,7 +28,7 @@ class _HomeState extends State<Home> {
   }
   final FirebaseAuth _auth = FirebaseAuth.instance;
   int index = 0;
-  List<Widget> pages = [Menu(), Cart(), Profile(),OrderPage(),AdminPage()];
+  List<Widget> pages = [MenuTemp(), CartTemp(), Profile(),OrderPage(),AdminPage()];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
