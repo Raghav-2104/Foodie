@@ -1,10 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 class Menu extends StatefulWidget {
-  const Menu({super.key});
+  const Menu({Key? key});
 
   @override
   State<Menu> createState() => _MenuState();
@@ -13,123 +12,103 @@ class Menu extends StatefulWidget {
 class _MenuState extends State<Menu> {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   FirebaseAuth _auth = FirebaseAuth.instance;
-  List<Map<String, dynamic>> itemList = [];
+
   @override
   Widget build(BuildContext context) {
-    var cart = firestore.collection('Cart').doc(_auth.currentUser?.email);
     return Container(
       child: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance.collection('Menu').snapshots(),
-        builder: (context, snapshot) {
-          bool isPresentInCart = false;
-          if (snapshot.connectionState == ConnectionState.waiting) {
+        builder: (context, menuSnapshot) {
+          if (menuSnapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
+          } else if (menuSnapshot.hasError) {
             return const Center(
-                child: Text(
-                    'There is an issue with server \n Please try again Later'));
+              child: Text(
+                  'There is an issue with the server\nPlease try again later'),
+            );
+          } else if (!menuSnapshot.hasData || menuSnapshot.data!.docs.isEmpty) {
+            return const Center(
+              child: Text('No items available'),
+            );
           } else {
-            return Column(
-              children: [
-                Expanded(
-                  child: ListView.builder(
-                    itemCount: snapshot.data?.docs.length,
+            return FutureBuilder<DocumentSnapshot>(
+              future: firestore
+                  .collection('Cart')
+                  .doc(_auth.currentUser?.email)
+                  .get(),
+              builder: (context, cartSnapshot) {
+                if (cartSnapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                } else if (cartSnapshot.hasError) {
+                  return const Center(
+                    child: Text(
+                        'There is an issue with the server\nPlease try again later'),
+                  );
+                } else {
+                  var cartData =
+                      cartSnapshot.data?.data() as Map<String, dynamic>? ?? {};
+                  var itemList = (cartData['itemList'] as List<dynamic>?) ?? [];
+                  // print('total:'+cartData['total'].toString());
+                  return ListView.builder(
+                    itemCount: menuSnapshot.data?.docs.length,
                     itemBuilder: (context, index) {
-                      var doc = snapshot.data?.docs[index];
-                      var itemName = doc?['name'];
-                      var itemPrice = doc?['price'];
-                      var temp = 'Add';
+                      var cart = firestore
+                          .collection('Cart')
+                          .doc(_auth.currentUser?.email);
+                      var menuDoc = menuSnapshot.data?.docs[index];
+                      var itemName = menuDoc?['name'];
+                      var itemPrice = menuDoc?['price'];
+
+                      var isPresentInCart =
+                          itemList.any((item) => item['itemName'] == itemName);
+
                       return Card(
-                          child: ListTile(
-                        title: Text(
-                          doc?['name'],
-                          style: const TextStyle(
-                              fontFamily: 'Times New Roman',
+                        child: ListTile(
+                          title: Text(menuDoc?['name'],
+                            style:const TextStyle(
                               fontSize: 20,
-                              fontStyle: FontStyle.normal,
-                              fontWeight: FontWeight.w500),
-                        ),
-                        subtitle: Text(
-                          '₹${doc?['price']}',
-                          style: const TextStyle(
-                              fontFamily: 'Times New Roman',
+                              fontWeight: FontWeight.bold
+                              )
+                          ),
+                          subtitle: Text("₹${menuDoc?['price']}",
+                            style:const TextStyle(
                               fontSize: 16,
-                              fontStyle: FontStyle.normal,
-                              fontWeight: FontWeight.w300,
-                              color: Colors.black54),
-                        ),
-                        trailing: ElevatedButton(
-                            style: const ButtonStyle(
-                                backgroundColor:
-                                    MaterialStatePropertyAll<Color>(
-                                        Colors.black),
-                                foregroundColor:
-                                    MaterialStatePropertyAll<Color>(
-                                        Colors.white),
-                                overlayColor: MaterialStatePropertyAll<Color>(
-                                    Colors.red)),
+                              )
+                          ),
+                          trailing: IconButton(
                             onPressed: () async {
-                              var cartSnapshot = await cart.get();
-                              if (cartSnapshot.exists) {
-                                var itemList = cartSnapshot.data()?['itemList']
-                                    as List<dynamic>;
-                                int total = cartSnapshot.data()?['total'];
-
-                                for (var item in itemList) {
-                                  if (item['itemName'] == itemName) {
-                                    // Item is already in the cart
-                                    isPresentInCart = !isPresentInCart;
-                                    break;
-                                  }
-                                }
-
-                                if (isPresentInCart) {
-                                  // print('Item is already in the cart!');
-                                  setState(() {
-                                    print('isPresentInCart' +
-                                        isPresentInCart.toString());
-                                    isPresentInCart = !isPresentInCart;
-                                    print(temp);
-                                    temp = 'Remove';
-                                    print(temp);
-                                  });
-                                  total -= int.parse(itemPrice);
+                              int total=cartData['total'];
+                              if (isPresentInCart) {
+                                // Item is already in the cart, you can handle this case here
+                                // For example, show a snackbar or alert
+                                setState(() {
                                   itemList.removeWhere((element) =>
                                       element['itemName'] == itemName);
-                                  cart.update(
-                                      {'itemList': itemList, 'total': total});
-                                  // print(itemList);
-                                  // print(cartSnapshot.data()?['itemList'][0]['itemName']);
-                                } else {
-                                  // print(
-                                  // 'Item is not in the cart. Add it to the cart!');
-                                  setState(() {
-                                    print('isPresentInCart' +
-                                        isPresentInCart.toString());
-                                    isPresentInCart = !isPresentInCart;
-                                    print(temp);
-                                    temp = 'Add';
-                                    print(temp);
-                                  });
+                                total -= int.parse(itemPrice);
+                                });
+                              } else {
+                                // Item is not in the cart, you can add it to the cart here
+                                // For example, update the cart in Firestore
+                                setState(() {
+                                  total += int.parse(itemPrice);
                                   itemList.add({
                                     'itemName': itemName,
                                     'itemPrice': itemPrice,
                                     'quantity': 1
                                   });
-                                  total += int.parse(itemPrice);
-                                  cart.update(
-                                      {'itemList': itemList, 'total': total});
-                                }
-                              } else {
-                                print('Cart document does not exist!');
+                                });
                               }
+                              cart.update({'itemList': itemList,'total':total});
                             },
-                            child: Text(temp)),
-                      ));
+                            icon:
+                                isPresentInCart ? const Icon(Icons.done,color: Colors.green,size:30,) : const Icon(Icons.add,color: Colors.black,size:30),
+                          ),
+                        ),
+                      );
                     },
-                  ),
-                ),
-              ],
+                  );
+                }
+              },
             );
           }
         },

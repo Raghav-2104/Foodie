@@ -26,7 +26,7 @@ class _ProfileState extends State<Profile> {
       builder:
           (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return CircularProgressIndicator();
+          return const CircularProgressIndicator();
         }
 
         if (snapshot.hasError) {
@@ -34,7 +34,7 @@ class _ProfileState extends State<Profile> {
         }
 
         if (!snapshot.hasData || !snapshot.data!.exists) {
-          return Text('Document does not exist');
+          return const Text('Document does not exist');
         }
 
         var data = snapshot.data!.data() as Map<String, dynamic>;

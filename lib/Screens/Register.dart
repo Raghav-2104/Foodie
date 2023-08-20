@@ -48,7 +48,7 @@ class _RegistrationState extends State<Registration> {
         ),
         centerTitle: true,
       ),
-      body:isLoading?const Center(child: CircularProgressIndicator(),): Form(
+      body:Form(
         key: _formKey,
         child: Column(
           children: [
@@ -226,11 +226,9 @@ class _RegistrationState extends State<Registration> {
             ElevatedButton(
                 onPressed: () async {
                   if (_formKey.currentState!.validate()) {
-                    if (isLoading) {
-                      setState(() {
-                        isLoading = true;
-                      });
-                    }
+                    setState(() {
+                      isLoading = true;
+                    });
                     dynamic result = await _auth.registerWithEmailAndPassword(
                         email, password);
                     if (result != null) {
@@ -276,7 +274,7 @@ class _RegistrationState extends State<Registration> {
                   backgroundColor: Colors.black,
                   foregroundColor: Colors.white,
                 ),
-                child: const Text('Register'))
+                child: isLoading?const Stack(children: [Text('Register'),CircularProgressIndicator()],): const Text('Register'))
           ],
         ),
       ),

@@ -12,13 +12,13 @@ class Cart extends StatefulWidget {
 }
 
 class _CartState extends State<Cart> {
-  FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   static var total = 0;
   void press() {
     Navigator.pop(context);
     Navigator.push(
-        context, MaterialPageRoute(builder: (context) => OrderPage()));
+        context, MaterialPageRoute(builder: (context) =>const OrderPage()));
   }
 
   void order() async {
@@ -28,7 +28,6 @@ class _CartState extends State<Cart> {
     await cartRef.get().then((DocumentSnapshot) {
       cart = DocumentSnapshot.data() as Map<String, dynamic>;
     });
-    print(cart);
     final invoiceNumberRef = firestore
         .collection('InvoiceNumber')
         .doc(_auth.currentUser!.email)
@@ -46,8 +45,6 @@ class _CartState extends State<Cart> {
             .update(invoiceNumberRef, {'number': FieldValue.increment(1)});
         return nextNumber;
       });
-
-      print(transactionResult); // Make sure this prints a valid number
 
 // Create the invoice with the incremented number
       firestore
@@ -74,7 +71,6 @@ class _CartState extends State<Cart> {
   Widget build(BuildContext context) {
     final docRef = firestore.collection('Cart').doc(_auth.currentUser?.email);
 
-    // print('total=${total}');
     return Column(
       children: [
         Expanded(
@@ -103,7 +99,6 @@ class _CartState extends State<Cart> {
                   );
                 }
                 total = snapshot.data?.get('total');
-                print('Total=$total');
                 return Column(
                   children: [
                     Expanded(

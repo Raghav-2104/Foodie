@@ -1,15 +1,11 @@
 import 'package:canteen/Screens/AddProduct.dart';
 import 'package:canteen/Screens/Cart.dart';
 import 'package:canteen/Screens/Login.dart';
-import 'package:canteen/Screens/Menu.dart';
-import 'package:canteen/Screens/Menutemp.dart';
 import 'package:canteen/Screens/Orders.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
-
-import 'CartTemp.dart';
-import 'Menu2.dart';
+import 'Menu.dart';
 import 'Profile.dart';
 
 class Home extends StatefulWidget {
@@ -29,7 +25,7 @@ class _HomeState extends State<Home> {
   }
   final FirebaseAuth _auth = FirebaseAuth.instance;
   int index = 0;
-  List<Widget> pages = [Menu2(), Cart(), Profile(),OrderPage(),AdminPage()];
+  List<Widget> pages = [const Menu(),const Cart(), Profile(),const OrderPage(),const AdminPage()];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -58,7 +54,6 @@ class _HomeState extends State<Home> {
               onTabChange: (value) {
                 setState(() {
                   index = value;
-                  print(index);
                 });
               },
               padding: const EdgeInsets.all(8),
