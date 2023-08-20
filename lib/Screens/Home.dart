@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 
 import 'CartTemp.dart';
+import 'Menu2.dart';
 import 'Profile.dart';
 
 class Home extends StatefulWidget {
@@ -28,7 +29,7 @@ class _HomeState extends State<Home> {
   }
   final FirebaseAuth _auth = FirebaseAuth.instance;
   int index = 0;
-  List<Widget> pages = [MenuTemp(), CartTemp(), Profile(),OrderPage(),AdminPage()];
+  List<Widget> pages = [Menu2(), Cart(), Profile(),OrderPage(),AdminPage()];
   @override
   Widget build(BuildContext context) {
     return Scaffold(

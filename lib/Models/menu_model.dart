@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:canteen/Screens/Menu.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -12,7 +10,8 @@ class MenuProvider extends ChangeNotifier {
   MenuProvider() {
     getMenu();
     getCartListFromFirestore();
-    print('Menu Provider\n${itemList}');
+    getTotal();
+    // print('Menu Provider\n${itemList}');
   }
   Future<void> getMenu() async {
     FirebaseFirestore firestore = FirebaseFirestore.instance;
@@ -39,7 +38,7 @@ class MenuProvider extends ChangeNotifier {
           cartList.add({'name': item['itemName'], 'price': item['itemPrice']});
         }
       }
-      print(getCartList);
+      // print(getCartList);
       notifyListeners();
     });
   }
@@ -54,7 +53,7 @@ class MenuProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void deleteFromCart(int index){
+  void deleteFromCart(int index) {
     cartList.removeAt(index);
     FirebaseFirestore firestore = FirebaseFirestore.instance;
     firestore

@@ -15,7 +15,7 @@ class _MenuTempState extends State<MenuTemp> {
     return Consumer<MenuProvider>(
       builder: (context, value, child) {
         return ListView.builder(
-          itemCount: value.getItemList.length,
+        itemCount: value.getItemList.length,
         itemBuilder: (context, index) {
           return Card(
             child: ListTile(
@@ -36,6 +36,15 @@ class _MenuTempState extends State<MenuTemp> {
                     fontWeight: FontWeight.w300,
                     color: Colors.black54),
               ),
+              trailing: value.getCartList.contains(value.getItemList[index])
+                  ? const Icon(Icons.check)
+                  : IconButton(
+                      onPressed: () {
+                        Provider.of<MenuProvider>(context, listen: false)
+                            .addToCart(value.getItemList[index]['name'],
+                                int.parse(value.getItemList[index]['price']));
+                      },
+                      icon: const Icon(Icons.add_shopping_cart))
             ),
           );
         },
