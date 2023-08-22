@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'Menu.dart';
 import 'Profile.dart';
+import 'package:flutter_awesome_alert_box/flutter_awesome_alert_box.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -23,24 +24,45 @@ class _HomeState extends State<Home> {
       isLogin = !isLogin;
     });
   }
+
   final FirebaseAuth _auth = FirebaseAuth.instance;
   int index = 0;
-  List<Widget> pages = [const Menu(),const Cart(), Profile(),const OrderPage(),const AdminPage()];
+  List<Widget> pages = [
+    const Menu(),
+    Cart(),
+    Profile(),
+    const OrderPage(),
+    const AdminPage()
+  ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[200],
+        backgroundColor: Colors.grey[200],
         appBar: AppBar(
           title: const Text('Food Order'),
           actions: [
             IconButton(
               onPressed: () {
-                _auth.signOut();
-                Navigator.pushReplacement(
-                    context, MaterialPageRoute(builder: (context) => LoginCustomer(onTap:toggleScreen ,)));
+                ConfirmAlertBox(
+                    context: context,
+                    title: 'Logout',
+                    infoMessage: 'Are You Sure You Want To Logout ?',
+                    icon: Icons.logout,
+                    onPressedYes: () {
+                      _auth.signOut();
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => LoginCustomer(
+                                    onTap: toggleScreen,
+                                  )));
+                    },
+                    onPressedNo: () {
+                      Navigator.pop(context);
+                    });
               },
               icon: const Icon(Icons.logout),
-            )
+            ),
           ],
           backgroundColor: Colors.black,
           elevation: 0,
@@ -61,7 +83,8 @@ class _HomeState extends State<Home> {
                 const GButton(icon: (Icons.menu), text: 'Menu'),
                 const GButton(icon: (Icons.shopping_cart), text: 'Cart'),
                 const GButton(icon: (Icons.person), text: 'Profile'),
-                const GButton(icon: (Icons.request_page_outlined), text: 'Your Orders'),
+                const GButton(
+                    icon: (Icons.request_page_outlined), text: 'Your Orders'),
                 if (_auth.currentUser?.email == 'test@ves.ac.in')
                   const GButton(icon: (Icons.edit), text: 'Edit Menu'),
               ],

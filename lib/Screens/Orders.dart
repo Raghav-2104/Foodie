@@ -17,6 +17,17 @@ class _OrderPageState extends State<OrderPage> {
     return Container(
         child: Column(
       children: [
+        const SizedBox(height: 20,),
+        const Text('Your Orders',
+          style: TextStyle(
+            fontSize: 20,
+            fontFamily: 'Times New Roman',
+            letterSpacing: 1,
+            fontWeight: FontWeight.w600,
+            wordSpacing: 4,
+          ),
+        ),
+        const SizedBox(height: 20,),
         Expanded(
           child: StreamBuilder<QuerySnapshot>(
             stream: FirebaseFirestore.instance
@@ -40,11 +51,6 @@ class _OrderPageState extends State<OrderPage> {
                 for (var invoiceDoc in invoiceDocs) {
                   Map<String, dynamic> data =
                       invoiceDoc.data() as Map<String, dynamic>;
-
-                  if (data != null) {
-                    print(data);
-                    // Access individual fields in the 'data' map
-                  }
                 }
                 return ListView.builder(
                   itemCount: invoiceDocs.length,
