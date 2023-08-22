@@ -19,13 +19,12 @@ To get started with Foodie, you will need to:
 4.  Run  `flutter run`  to start the app.
 
 ## Features to be added
-- Showing order details of all the customers in admin panel.
+- Showing order details of all the customers in the admin panel.
 - Payment mode integration.
 
 ## Bugs
 
-- In Menu page, the add button is not changing to remove button but all the functionalities are working as expected.
-- On Registration page, after tapping on register, circular progress indicator is not working.
+-Currently no bugs
 
 ##  Contributing
 
