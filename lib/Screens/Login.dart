@@ -1,3 +1,4 @@
+import 'package:canteen/Screens/ForgetPassword.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -185,6 +186,11 @@ class _LoginCustomerState extends State<LoginCustomer> {
 
                   ElevatedButton(
                     onPressed: () {
+
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const ForgetPassword()));
                       Fluttertoast.showToast(msg: 'Feature Implementing Soon');
                     },
                     style: ElevatedButton.styleFrom(

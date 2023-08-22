@@ -39,7 +39,7 @@ class _HomeState extends State<Home> {
     return Scaffold(
         backgroundColor: Colors.grey[200],
         appBar: AppBar(
-          title: const Text('Food Order'),
+          title: const Text('Foodie'),
           actions: [
             IconButton(
               onPressed: () {

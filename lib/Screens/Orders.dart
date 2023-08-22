@@ -38,7 +38,13 @@ class _OrderPageState extends State<OrderPage> {
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(
-                  child: CircularProgressIndicator(),
+                  child: Column(
+                    children: [
+                      CircularProgressIndicator(),
+                      SizedBox(height: 20,),
+                      Text('Order is being placed'),
+                    ],
+                  ),
                 );
               } else if (snapshot.hasError) {
                 return Text("Error:${snapshot.error}");

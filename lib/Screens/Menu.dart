@@ -61,46 +61,49 @@ class _MenuState extends State<Menu> {
                     var isPresentInCart =
                         itemList.any((item) => item['itemName'] == itemName);
 
-                    return Card(
-                      child: ListTile(
-                        title: Text(menuDoc?['name'],
-                          style:const TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold
-                            )
-                        ),
-                        subtitle: Text("₹${menuDoc?['price']}",
-                          style:const TextStyle(
-                            fontSize: 16,
-                            )
-                        ),
-                        trailing: IconButton(
-                          onPressed: () async {
-                            int total=cartData['total'];
-                            if (isPresentInCart) {
-                              // Item is already in the cart, you can handle this case here
-                              // For example, show a snackbar or alert
-                              setState(() {
-                                itemList.removeWhere((element) =>
-                                    element['itemName'] == itemName);
-                              total -= int.parse(itemPrice);
-                              });
-                            } else {
-                              // Item is not in the cart, you can add it to the cart here
-                              // For example, update the cart in Firestore
-                              setState(() {
-                                total += int.parse(itemPrice);
-                                itemList.add({
-                                  'itemName': itemName,
-                                  'itemPrice': itemPrice,
-                                  'quantity': 1
+                    return Padding(
+                      padding:const EdgeInsets.fromLTRB(16, 10, 16, 0),
+                      child: Card(
+                        child: ListTile(
+                          title: Text(menuDoc?['name'],
+                            style:const TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold
+                              )
+                          ),
+                          subtitle: Text("₹${menuDoc?['price']}",
+                            style:const TextStyle(
+                              fontSize: 16,
+                              )
+                          ),
+                          trailing: IconButton(
+                            onPressed: () async {
+                              int total=cartData['total'];
+                              if (isPresentInCart) {
+                                // Item is already in the cart, you can handle this case here
+                                // For example, show a snackbar or alert
+                                setState(() {
+                                  itemList.removeWhere((element) =>
+                                      element['itemName'] == itemName);
+                                total -= int.parse(itemPrice);
                                 });
-                              });
-                            }
-                            cart.update({'itemList': itemList,'total':total});
-                          },
-                          icon:
-                              isPresentInCart ? const Icon(Icons.done,color: Colors.green,size:30,) : const Icon(Icons.add,color: Colors.black,size:30),
+                              } else {
+                                // Item is not in the cart, you can add it to the cart here
+                                // For example, update the cart in Firestore
+                                setState(() {
+                                  total += int.parse(itemPrice);
+                                  itemList.add({
+                                    'itemName': itemName,
+                                    'itemPrice': itemPrice,
+                                    'quantity': 1
+                                  });
+                                });
+                              }
+                              cart.update({'itemList': itemList,'total':total});
+                            },
+                            icon:
+                                isPresentInCart ? const Icon(Icons.done,color: Colors.green,size:30,) : const Icon(Icons.add,color: Colors.black,size:30),
+                          ),
                         ),
                       ),
                     );
