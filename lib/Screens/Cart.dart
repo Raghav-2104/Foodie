@@ -26,14 +26,26 @@ class _CartState extends State<Cart> {
     setState(() {
       widget.isLoading = true;
     });
-    // print('Ordering');
-    // print(_auth.currentUser?.email);
+    print('Ordering');
+    print(_auth.currentUser?.email);
     FirebaseFirestore firestore = FirebaseFirestore.instance;
     final cartRef = firestore.collection('Cart').doc(_auth.currentUser?.email);
     var cart;
     await cartRef.get().then((DocumentSnapshot) {
       cart = DocumentSnapshot.data() as Map<String, dynamic>;
     });
+
+    // Check if the InvoiceNumber collection exists
+    final invoiceNumberCollectionRef = firestore
+        .collection('InvoiceNumber')
+        .doc(_auth.currentUser!.email);
+    final invoiceNumberDoc = await invoiceNumberCollectionRef.get();
+
+    if (!invoiceNumberDoc.exists) {
+      // Create the collection
+      firestore.collection('InvoiceNumber').doc(_auth.currentUser!.email).collection('OrderNums').doc('currentNumber').set({'number': 0});
+    }
+
     final invoiceNumberRef = firestore
         .collection('InvoiceNumber')
         .doc(_auth.currentUser!.email)
@@ -41,6 +53,7 @@ class _CartState extends State<Cart> {
         .doc('currentNumber');
 
     try {
+      print('Trying');
       final transactionResult =
           await firestore.runTransaction((transaction) async {
         final invoiceDoc = await transaction.get(invoiceNumberRef);
@@ -51,7 +64,7 @@ class _CartState extends State<Cart> {
             .update(invoiceNumberRef, {'number': FieldValue.increment(1)});
         return nextNumber;
       });
-
+      print('Transaction result: $transactionResult');
 // Create the invoice with the incremented number
       firestore
           .collection('Orders')
@@ -64,12 +77,14 @@ class _CartState extends State<Cart> {
         'itemList': cart['itemList'],
         'TimeStamp': DateTime.now().toString(),
       });
+      print('Invoice created with order number: $transactionResult');
       firestore
           .collection('Cart')
           .doc(_auth.currentUser?.email)
           .update({'itemList': [], 'total': 0});
+      print('Cart Cleared');
     } catch (e) {
-      print(e);
+      print('error: $e');
     }
 
     setState(() {
