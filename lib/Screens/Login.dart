@@ -1,11 +1,12 @@
 import 'package:canteen/Screens/ForgetPassword.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:canteen/Authentication/auth.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'Home.dart';
 import 'Register.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class LoginCustomer extends StatefulWidget {
   final Function onTap;
@@ -21,6 +22,43 @@ class _LoginCustomerState extends State<LoginCustomer> {
   FirebaseAuth auth = FirebaseAuth.instance;
   String email = '';
   String password = '';
+  final googleSignIn = GoogleSignIn();
+  GoogleSignInAccount? _user;
+  GoogleSignInAccount get user => _user!;
+  Future googleLogin() async {
+    final googleUser = await googleSignIn.signIn();
+    if (googleUser == null) return;
+    _user = googleUser;
+    print(googleUser.email);
+
+    final googleAuth = await googleUser.authentication;
+    final credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth.accessToken,
+      idToken: googleAuth.idToken,
+    );
+    try {
+      await FirebaseAuth.instance.signInWithCredential(credential);
+      Navigator.pop(context);
+      FirebaseFirestore.instance.collection('users').doc(_user?.email).set({
+        'Email': user.email,
+        'Name': user.displayName,
+        'Phone Number':'Please Update Your Phone Number',
+        'photo': user.photoUrl,
+      });
+      FirebaseFirestore.instance
+          .collection('Cart')
+          .doc(auth.currentUser?.email)
+          .set({'itemList': [], 'total': 0});
+
+      Navigator.push(context, MaterialPageRoute(builder: (context) {
+        return const Home();
+      }));
+    } catch (e) {
+      print(e.toString());
+    }
+    // return const HomePage();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -186,12 +224,10 @@ class _LoginCustomerState extends State<LoginCustomer> {
 
                   ElevatedButton(
                     onPressed: () {
-
                       Navigator.push(
                           context,
                           MaterialPageRoute(
                               builder: (context) => const ForgetPassword()));
-                      Fluttertoast.showToast(msg: 'Feature Implementing Soon');
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.black,
@@ -210,9 +246,69 @@ class _LoginCustomerState extends State<LoginCustomer> {
 
             //Register Button
             const SizedBox(
-              height: 20,
+              height: 5,
             ),
 
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 50.0),
+              // child: CupertinoButton(
+              //   onPressed: googleAuth,
+              //   color: Colors.black,
+              //   child: const Row(
+              //     mainAxisAlignment: MainAxisAlignment.center,
+              //     children: [
+              //       Image(
+              //         image: AssetImage('assets/google.png'),
+              //         height: 50,
+              //         width: 50,
+              //       ),
+              //       SizedBox(
+              //         width: 5,
+              //       ),
+              //       Text(
+              //         'Login with Google',
+              //         style: TextStyle(
+              //             fontSize: 20,
+              //             fontWeight: FontWeight.w500,
+              //             color: (Colors.red)),
+              //       ),
+              //     ],
+              //   ),
+              // ),
+              child: GestureDetector(
+                onTap: googleLogin,
+                child: Container(
+                  height: 60,
+                  decoration: BoxDecoration(
+                    color: Colors.black,
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  child: const Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image(
+                        image: AssetImage('assets/google.png'),
+                        height: 50,
+                        width: 50,
+                      ),
+                      SizedBox(
+                        width: 5,
+                      ),
+                      Text(
+                        'Login with Google',
+                        style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w500,
+                            color: (Colors.red)),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(
+              height: 15,
+            ),
             Row(
               children: [
                 const Padding(padding: EdgeInsets.symmetric(horizontal: 50)),

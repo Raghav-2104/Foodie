@@ -5,6 +5,7 @@ import 'package:canteen/Screens/Orders.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'Menu.dart';
 import 'Profile.dart';
 import 'package:flutter_awesome_alert_box/flutter_awesome_alert_box.dart';
@@ -34,6 +35,8 @@ class _HomeState extends State<Home> {
     const OrderPage(),
     const AdminPage()
   ];
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -49,6 +52,7 @@ class _HomeState extends State<Home> {
                     infoMessage: 'Are You Sure You Want To Logout ?',
                     icon: Icons.logout,
                     onPressedYes: () {
+                      GoogleSignIn().disconnect();
                       _auth.signOut();
                       Navigator.pushReplacement(
                           context,

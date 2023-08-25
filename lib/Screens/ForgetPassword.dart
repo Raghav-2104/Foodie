@@ -15,7 +15,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
   bool _isLoading = false;
   bool _isEmailSent = false;
   String _emailError='';
-  String _emailSentSuccess = "Email Sent Successfully";
+  final String _emailSentSuccess = "Email Sent Successfully";
   @override
   void initState() {
     super.initState();

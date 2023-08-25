@@ -26,6 +26,8 @@ class _CartState extends State<Cart> {
     setState(() {
       widget.isLoading = true;
     });
+    // print('Ordering');
+    // print(_auth.currentUser?.email);
     FirebaseFirestore firestore = FirebaseFirestore.instance;
     final cartRef = firestore.collection('Cart').doc(_auth.currentUser?.email);
     var cart;
@@ -62,10 +64,10 @@ class _CartState extends State<Cart> {
         'itemList': cart['itemList'],
         'TimeStamp': DateTime.now().toString(),
       });
-    firestore
-        .collection('Cart')
-        .doc(_auth.currentUser?.email)
-        .update({'itemList': [], 'total': 0});
+      firestore
+          .collection('Cart')
+          .doc(_auth.currentUser?.email)
+          .update({'itemList': [], 'total': 0});
     } catch (e) {
       print(e);
     }

@@ -17,8 +17,11 @@ class _OrderPageState extends State<OrderPage> {
     return Container(
         child: Column(
       children: [
-        const SizedBox(height: 20,),
-        const Text('Your Orders',
+        const SizedBox(
+          height: 20,
+        ),
+        const Text(
+          'Your Orders',
           style: TextStyle(
             fontSize: 20,
             fontFamily: 'Times New Roman',
@@ -27,7 +30,9 @@ class _OrderPageState extends State<OrderPage> {
             wordSpacing: 4,
           ),
         ),
-        const SizedBox(height: 20,),
+        const SizedBox(
+          height: 20,
+        ),
         Expanded(
           child: StreamBuilder<QuerySnapshot>(
             stream: FirebaseFirestore.instance
@@ -41,7 +46,9 @@ class _OrderPageState extends State<OrderPage> {
                   child: Column(
                     children: [
                       CircularProgressIndicator(),
-                      SizedBox(height: 20,),
+                      SizedBox(
+                        height: 20,
+                      ),
                       Text('Order is being placed'),
                     ],
                   ),
@@ -78,9 +85,7 @@ class _OrderPageState extends State<OrderPage> {
                         title: Text(
                           invoiceDocs[index].id,
                           style: const TextStyle(
-                            fontFamily: 'Times New Roman',
-                            letterSpacing: 1
-                          ),
+                              fontFamily: 'Times New Roman', letterSpacing: 1),
                         ),
                         children: [
                           Padding(
@@ -106,7 +111,10 @@ class _OrderPageState extends State<OrderPage> {
                                   children: [
                                     Padding(
                                         padding: const EdgeInsets.only(
-                                            left: 16, right: 5,top: 5,bottom: 5),
+                                            left: 16,
+                                            right: 5,
+                                            top: 5,
+                                            bottom: 5),
                                         child: Text(
                                           '${data['itemList'][itemIndex]['itemName']}  :',
                                           style: const TextStyle(
@@ -114,7 +122,8 @@ class _OrderPageState extends State<OrderPage> {
                                               fontFamily: 'Times New Roman'),
                                         )),
                                     Padding(
-                                      padding: const EdgeInsets.symmetric(vertical: 5),
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 5),
                                       child: Text(
                                         '${data['itemList'][itemIndex]['quantity']}',
                                         style: const TextStyle(
