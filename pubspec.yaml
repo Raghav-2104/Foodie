@@ -46,6 +46,7 @@ dependencies:
   flutter_awesome_alert_box: ^2.1.1
   flutter_social_button: ^1.1.4+1
   google_sign_in: ^6.1.4
+  shimmer: ^3.0.0
 
 dev_dependencies:
   flutter_test:

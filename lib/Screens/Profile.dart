@@ -55,7 +55,6 @@ class _ProfileState extends State<Profile> {
                   radius: 80,
                 ),
               ),
-
               const SizedBox(
                 height: 20,
               ),
