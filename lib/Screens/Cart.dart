@@ -35,67 +35,52 @@ class _CartState extends State<Cart> {
       cart = DocumentSnapshot.data() as Map<String, dynamic>;
     });
 
-    // Check if the InvoiceNumber collection exists
-    final invoiceNumberCollectionRef = firestore
-        .collection('InvoiceNumber')
-        .doc(_auth.currentUser!.email);
-    final invoiceNumberDoc = await invoiceNumberCollectionRef.get();
-
-    if (!invoiceNumberDoc.exists) {
-      // Create the collection
-      firestore.collection('InvoiceNumber').doc(_auth.currentUser!.email).collection('OrderNums').doc('currentNumber').set({'number': 0});
-    }
-
+    try {
+    // Get the current order number
     final invoiceNumberRef = firestore
         .collection('InvoiceNumber')
         .doc(_auth.currentUser!.email)
         .collection('OrderNums')
         .doc('currentNumber');
 
-    try {
-      print('Trying');
-      final transactionResult =
-          await firestore.runTransaction((transaction) async {
-        final invoiceDoc = await transaction.get(invoiceNumberRef);
-        int currentNumber =
-            invoiceDoc.exists ? invoiceDoc.data()!['number'] : 0;
-        int nextNumber = currentNumber + 1;
-        transaction
-            .update(invoiceNumberRef, {'number': FieldValue.increment(1)});
-        return nextNumber;
-      });
-      print('Transaction result: $transactionResult');
-// Create the invoice with the incremented number
-      firestore
-          .collection('Orders')
-          .doc(_auth.currentUser?.email)
-          .collection('Invoice')
-          .doc(
-              'Order: $transactionResult') // Use the incremented number as the document ID
-          .set({
-        'total': cart['total'],
-        'itemList': cart['itemList'],
-        'TimeStamp': DateTime.now().toString(),
-      });
-      print('Invoice created with order number: $transactionResult');
-      firestore
-          .collection('Cart')
-          .doc(_auth.currentUser?.email)
-          .update({'itemList': [], 'total': 0});
-      print('Cart Cleared');
-    } catch (e) {
-      print('error: $e');
-    }
+    final orderNumberDoc = await invoiceNumberRef.get();
+    int currentNumber = orderNumberDoc.exists ? orderNumberDoc.data()!['number'] : 0;
 
-    setState(() {
-      widget.isLoading = false;
+    // Increment the order number
+    final nextNumber = currentNumber + 1;
+    await invoiceNumberRef.set({'number': nextNumber});
+
+    // Create the invoice with the incremented number
+    firestore
+        .collection('Orders')
+        .doc(_auth.currentUser?.email)
+        .collection('Invoice')
+        .doc('Order: $nextNumber') // Use the incremented number as the document ID
+        .set({
+      'total': cart['total'],
+      'itemList': cart['itemList'],
+      'TimeStamp': DateTime.now().toString(),
     });
+    
+    print('Invoice created with order number: $nextNumber');
 
-    // Navigator.push(
-    //     context, MaterialPageRoute(builder: (context) => OrderPage()));
-    Fluttertoast.showToast(
-      msg: 'Order Created Successfully',
-    );
+    // Clear the cart
+    firestore
+        .collection('Cart')
+        .doc(_auth.currentUser?.email)
+        .update({'itemList': [], 'total': 0});
+    print('Cart Cleared');
+  } catch (e) {
+    print('error: $e');
+  }
+
+  setState(() {
+    widget.isLoading = false;
+  });
+
+  Fluttertoast.showToast(
+    msg: 'Order Created Successfully',
+  );
   }
 
   @override
