@@ -104,6 +104,12 @@ class _OrderPageState extends State<OrderPage> {
                             style: const TextStyle(
                                 fontSize: 18, fontFamily: 'Times New Roman'),
                           ),
+                          const Divider(
+                                          height: 20,
+                                          thickness: 2,
+                                          indent: 20,
+                                          endIndent: 20,
+                                        ),
                           Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Column(

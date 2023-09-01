@@ -81,6 +81,7 @@ class _CartState extends State<Cart> {
   Fluttertoast.showToast(
     msg: 'Order Created Successfully',
   );
+
   }
 
   @override
@@ -140,6 +141,7 @@ class _CartState extends State<Cart> {
                                   child: ListTile(
                                     leading: const CircleAvatar(
                                       backgroundImage:AssetImage('assets/nachos.png'),
+                                      foregroundColor:Colors.blueAccent,
                                     ),
                                     title: Text(
                                       cartItems[index]['itemName'],
