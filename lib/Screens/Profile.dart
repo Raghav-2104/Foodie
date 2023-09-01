@@ -39,25 +39,19 @@ class _ProfileState extends State<Profile> {
 
         var data = snapshot.data!.data() as Map<String, dynamic>;
         userData = data;
-        print(userData!['photo']);
+
         return Container(
           child: Column(
             children: [
-              const SizedBox(
-                height: 20,
-              ),
-              Center(
+              const SizedBox(height: 20,),
+              const Center(
                 child: CircleAvatar(
-                  backgroundImage: userData!['photo'] != null
-                      ? NetworkImage(userData!['photo']) as ImageProvider<Object>?
-                      : AssetImage('assets/man.png'),
-                  backgroundColor: Colors.red,
+                  foregroundImage: AssetImage('assets/man.png',),
+                  backgroundColor:Colors.red ,
                   radius: 80,
                 ),
               ),
-              const SizedBox(
-                height: 20,
-              ),
+              const SizedBox(height: 20,),
               ProfileCard(
                 title: 'Name',
                 data: userData!['Name'],
@@ -106,4 +100,3 @@ class _ProfileState extends State<Profile> {
     );
   }
 }
-
