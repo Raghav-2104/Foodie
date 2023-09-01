@@ -142,7 +142,11 @@ class _CartState extends State<Cart> {
                               itemBuilder: (context, index) {
                                 // print(cartItems[index]);
                                 return Card(
+                                  color: Colors.blue[100],
                                   child: ListTile(
+                                    leading: const CircleAvatar(
+                                      backgroundImage:AssetImage('assets/nachos.png'),
+                                    ),
                                     title: Text(
                                       cartItems[index]['itemName'],
                                       style: const TextStyle(
@@ -158,7 +162,7 @@ class _CartState extends State<Cart> {
                                           fontSize: 16,
                                           fontStyle: FontStyle.normal,
                                           fontWeight: FontWeight.w300,
-                                          color: Colors.black54),
+                                          color: Colors.black87),
                                     ),
                                     //add quantity stepper
                                     trailing: Row(
