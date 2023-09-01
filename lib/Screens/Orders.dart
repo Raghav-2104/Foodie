@@ -39,6 +39,7 @@ class _OrderPageState extends State<OrderPage> {
                 .collection('Orders')
                 .doc(_auth.currentUser?.email)
                 .collection('Invoice')
+                .orderBy('TimeStamp', descending: true)
                 .snapshots(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
@@ -74,14 +75,16 @@ class _OrderPageState extends State<OrderPage> {
                       padding: const EdgeInsets.symmetric(
                           vertical: 5, horizontal: 5),
                       child: ExpansionTile(
-                        textColor: Colors.blue,
+                        iconColor: Colors.black,
+                        collapsedIconColor: Colors.black,
+                        textColor: Colors.black,
                         collapsedTextColor: Colors.black,
                         shape: const RoundedRectangleBorder(
                             borderRadius: BorderRadius.all(Radius.circular(8))),
                         collapsedShape: const RoundedRectangleBorder(
                             borderRadius: BorderRadius.all(Radius.circular(8))),
-                        backgroundColor: Colors.grey[300],
-                        collapsedBackgroundColor: Colors.grey[300],
+                        backgroundColor: Colors.blue[100],
+                        collapsedBackgroundColor: Colors.blue[50],
                         title: Text(
                           invoiceDocs[index].id,
                           style: const TextStyle(

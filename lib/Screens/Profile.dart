@@ -68,7 +68,7 @@ class _ProfileState extends State<Profile> {
                 },
               ),
               Card(
-                // color: Colors.grey[200],
+                color: Colors.yellow[200],
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
                 ),
@@ -78,7 +78,7 @@ class _ProfileState extends State<Profile> {
                     style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 18,
-                        color: Colors.blueGrey),
+                        color: Colors.red),
                   ),
                   subtitle: Text(
                     userData!['Email'],

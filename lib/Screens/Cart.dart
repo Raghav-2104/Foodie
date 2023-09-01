@@ -121,14 +121,23 @@ class _CartState extends State<Cart> {
                     } else {
                       List cartItems = snapshot.data?.get('itemList');
                       if (cartItems.isEmpty) {
-                        return const Padding(
-                          padding: EdgeInsets.all(8.0),
+                        return Padding(
+                          padding: const EdgeInsets.all(8.0),
                           child: Center(
-                            child: Text(
-                              'Delicious Food Is Waiting To Enter In Your Cart 😍',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                  fontFamily: 'Times New Roman', fontSize: 20),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: Colors.yellow[200],
+                              ),
+                              child: const Padding(
+                                padding:  EdgeInsets.all(8.0),
+                                child:  Text(
+                                  'Delicious Food Is Waiting To Enter In Your Cart 😍',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      fontFamily: 'Times New Roman', fontSize: 20),
+                                ),
+                              ),
                             ),
                           ),
                         );
