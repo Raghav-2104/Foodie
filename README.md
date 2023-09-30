@@ -1,13 +1,13 @@
 # Welcome to Foodie
 
-Foodie is a Flutter app that allows users to order food from their favorite restaurant. The app features a realtime menu cart, order detail generation, and admin ability to update the menu.
+Foodie is a Flutter app that allows users to order food from their favorite restaurant. The app features a real-time menu cart, order detail generation, and admin ability to update the menu.
 
 
 #  Features
 
--   Realtime menu cart: Users can add items to their cart in realtime, and the total price will be updated automatically.
+-   Real-time menu cart: Users can add items to their cart in real time, and the total price will be updated automatically.
 -   Order detail generation: When a user places an order, the app will generate a detailed order receipt that includes the items ordered, the price, and the order status.
--   Admin ability to update menu: Admins can update the menu in realtime, and the changes will be reflected in the app for all users.
+-   Admin ability to update menu: Admins can update the menu in real time, and the changes will be reflected in the app for all users.
 
 ## Getting Started
 
@@ -19,6 +19,7 @@ To get started with Foodie, you will need to:
 4.  Run  `flutter run`  to start the app.
 
 ## Features to be added
+- Updating images dynamically.
 - Showing order details of all the customers in the admin panel.
 - Payment mode integration.
 
