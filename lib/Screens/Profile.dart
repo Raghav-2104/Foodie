@@ -35,21 +35,32 @@ class _ProfileState extends State<Profile> {
         if (!snapshot.hasData || !snapshot.data!.exists) {
           return const Text('Document does not exist');
         }
-
+        // if(providerDa)
+        print(user!.providerData[0].email);
+        print(user.providerData[0].providerId);
         var data = snapshot.data!.data() as Map<String, dynamic>;
+        var image = 'assets/man.png';
+        if (user.providerData[0].providerId =='google.com') {
+          image = user.photoURL.toString();
+        }
+        print(image);
         userData = data;
-
         return Column(
           children: [
-            const SizedBox(height: 20,),
-            const Center(
+            const SizedBox(
+              height: 20,
+            ),
+            Center(
               child: CircleAvatar(
                 // foregroundImage: AssetImage('assets/man.png',),
-                backgroundColor:Colors.red ,
+                foregroundImage: Image.network(image).image,
+                backgroundColor: Colors.red,
                 radius: 80,
               ),
             ),
-            const SizedBox(height: 20,),
+            const SizedBox(
+              height: 20,
+            ),
             ProfileCard(
               title: 'Name',
               data: userData!['Name'],
