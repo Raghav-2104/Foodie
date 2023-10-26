@@ -35,15 +35,18 @@ class _ProfileState extends State<Profile> {
         if (!snapshot.hasData || !snapshot.data!.exists) {
           return const Text('Document does not exist');
         }
-        // if(providerDa)
-        print(user!.providerData[0].email);
-        print(user.providerData[0].providerId);
+
         var data = snapshot.data!.data() as Map<String, dynamic>;
         var image = 'assets/man.png';
-        if (user.providerData[0].providerId =='google.com') {
+        var name = data['Name'];
+        var phoneNumber = data['Phone Number'];
+        var email = data['Email'];
+        if (user!.providerData[0].providerId == 'google.com') {
           image = user.photoURL.toString();
+          name = user.displayName.toString();
+          phoneNumber = user.phoneNumber.toString()==''?data['Phone Number']:user.phoneNumber.toString();
+          email = user.email.toString();
         }
-        print(image);
         userData = data;
         return Column(
           children: [
@@ -52,7 +55,6 @@ class _ProfileState extends State<Profile> {
             ),
             Center(
               child: CircleAvatar(
-                // foregroundImage: AssetImage('assets/man.png',),
                 foregroundImage: Image.network(image).image,
                 backgroundColor: Colors.red,
                 radius: 80,
@@ -63,7 +65,7 @@ class _ProfileState extends State<Profile> {
             ),
             ProfileCard(
               title: 'Name',
-              data: userData!['Name'],
+              data: name,
               onProfileDataChanged: (title, newData) {
                 setState(() {
                   userData![title] = newData;
@@ -84,7 +86,7 @@ class _ProfileState extends State<Profile> {
                       color: Colors.red),
                 ),
                 subtitle: Text(
-                  userData!['Email'],
+                  email,
                   style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 20,
@@ -95,7 +97,7 @@ class _ProfileState extends State<Profile> {
             ),
             ProfileCard(
               title: 'Phone Number',
-              data: userData!['Phone Number'],
+              data: phoneNumber,
               onProfileDataChanged: (title, newData) {
                 setState(() {
                   userData![title] = newData;
