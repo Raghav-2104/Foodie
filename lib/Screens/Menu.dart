@@ -107,7 +107,7 @@ class _MenuState extends State<Menu> {
                           .snapshots()
                       : FirebaseFirestore.instance
                           .collection('Menu')
-                          .where('name', isGreaterThanOrEqualTo: search)
+                          .where('name', isGreaterThanOrEqualTo: search.trim())
                           .snapshots(),
                   builder: (context, menuSnapshot) {
                     if (menuSnapshot.connectionState ==
@@ -203,6 +203,7 @@ class _MenuState extends State<Menu> {
                               itemList.add({
                                 'itemName': itemName,
                                 'itemPrice': itemPrice,
+                                'itemImage': menuDoc?['image'],
                                 'quantity': 1
                               });
                             }
