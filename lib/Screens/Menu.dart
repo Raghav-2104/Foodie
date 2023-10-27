@@ -1,6 +1,11 @@
+import 'package:canteen/Keys/Unsplash.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:dio/dio.dart';
+
+const accessKey = Unsplash.UnSplashACCESSKEY;
 
 class Menu extends StatefulWidget {
   const Menu({Key? key});
@@ -15,6 +20,8 @@ class _MenuState extends State<Menu> {
   bool isSearching = false;
   String search = "";
   TextEditingController searchController = TextEditingController();
+  
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -143,7 +150,6 @@ class _MenuState extends State<Menu> {
               cartSnapshot.data?.data() as Map<String, dynamic>? ?? {};
           var itemList = (cartData['itemList'] as List<dynamic>?) ?? [];
           var total = cartData['total'];
-
           return GridView.builder(
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2, // You can adjust the number of columns here
@@ -169,8 +175,8 @@ class _MenuState extends State<Menu> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Image(
-                        image: AssetImage('assets/nachos.png'),
+                      Image(
+                        image: NetworkImage(menuDoc?['image']),
                         height: 120,
                         width: 120,
                       ),
