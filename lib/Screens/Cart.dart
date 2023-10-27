@@ -139,8 +139,8 @@ class _CartState extends State<Cart> {
                                 return Card(
                                   color: Colors.blue[100],
                                   child: ListTile(
-                                    leading: const CircleAvatar(
-                                      backgroundImage:AssetImage('assets/nachos.png'),
+                                    leading:  CircleAvatar(
+                                      backgroundImage:NetworkImage(cartItems[index]['itemImage']),
                                       foregroundColor:Colors.blueAccent,
                                     ),
                                     title: Text(
