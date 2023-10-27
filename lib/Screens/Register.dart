@@ -36,6 +36,7 @@ class _RegistrationState extends State<Registration> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey[200],
       appBar: AppBar(
         backgroundColor: Colors.black,
         title: const Text(
@@ -53,7 +54,14 @@ class _RegistrationState extends State<Registration> {
         child: Column(
           children: [
             const SizedBox(
-              height: 50,
+              height: 20,
+            ),
+            const CircleAvatar(
+              backgroundImage: AssetImage('assets/logo2.png'),
+              radius: 125,
+            ),
+            const SizedBox(
+              height: 20,
             ),
             //Name
             Padding(
@@ -65,7 +73,7 @@ class _RegistrationState extends State<Registration> {
                     borderRadius: BorderRadius.all(Radius.circular(15)),
                   ),
                   filled: true,
-                  fillColor: Colors.grey[300],
+                  fillColor: Colors.grey[50],
                   hintText: 'Name',
                 ),
                 enableSuggestions: true,
@@ -97,7 +105,7 @@ class _RegistrationState extends State<Registration> {
                     borderRadius: BorderRadius.all(Radius.circular(15)),
                   ),
                   filled: true,
-                  fillColor: Colors.grey[300],
+                  fillColor: Colors.grey[50],
                   hintText: 'Email',
                 ),
                 enableSuggestions: true,
@@ -130,7 +138,7 @@ class _RegistrationState extends State<Registration> {
                     borderRadius: BorderRadius.all(Radius.circular(15)),
                   ),
                   filled: true,
-                  fillColor: Colors.grey[300],
+                  fillColor: Colors.grey[50],
                   hintText: 'Phone Number',
                 ),
                 keyboardType: TextInputType.phone,
@@ -164,7 +172,7 @@ class _RegistrationState extends State<Registration> {
                     borderRadius: BorderRadius.all(Radius.circular(15)),
                   ),
                   filled: true,
-                  fillColor: Colors.grey[300],
+                  fillColor: Colors.grey[50],
                   hintText: 'Password',
                 ),
                 enableSuggestions: true,
@@ -198,7 +206,7 @@ class _RegistrationState extends State<Registration> {
                     borderRadius: BorderRadius.all(Radius.circular(15)),
                   ),
                   filled: true,
-                  fillColor: Colors.grey[300],
+                  fillColor: Colors.grey[50],
                   hintText: 'Confirm Password',
                 ),
                 enableSuggestions: true,
