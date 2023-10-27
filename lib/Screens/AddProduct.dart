@@ -1,6 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dio/dio.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import '../Keys/Unsplash.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
+const accessKey = Unsplash.UnSplashACCESSKEY;
 
 class AdminPage extends StatefulWidget {
   const AdminPage({super.key});
@@ -13,8 +18,34 @@ class _AdminPageState extends State<AdminPage> {
   final TextEditingController _name = TextEditingController();
   final TextEditingController _price = TextEditingController();
   FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+  getData(String query) async {
+    String url =
+        'https://api.unsplash.com/search/photos?query=$query&client_id=$accessKey';
+    var response = await Dio().get(url);
+    var link = await response.data['results'][0]['urls']['small'];
+    // Download the image from the link
+    var response2 = await Dio()
+        .get(link, options: Options(responseType: ResponseType.bytes));
+    var imageData = response2.data;
+    // Save the image to Firebase Storage
+    var storageRef = FirebaseStorage.instance.ref().child('images/$query.jpg');
+    var uploadTask = storageRef.putData(imageData);
+    await uploadTask
+        .whenComplete(() => print('Image uploaded to Firebase Storage'));
+  }
+
+  final FirebaseStorage storageRef = FirebaseStorage.instance;
+  getImageFromFireStorage(String name) async {
+    await getData(name);
+    var ref = storageRef.ref().child('images/$name.jpg');
+    var url = await ref.getDownloadURL();
+    return url;
+  }
+
   @override
   Widget build(BuildContext context) {
+    bool isLoading = false;
     return Column(
       children: [
         ButtonBar(
@@ -52,12 +83,16 @@ class _AdminPageState extends State<AdminPage> {
                             padding: const EdgeInsets.only(right: 30),
                             child: ElevatedButton(
                               onPressed: () async {
+                                
+                                var image = await getImageFromFireStorage(_name.text);
+                                
                                 firestore
                                     .collection('Menu')
                                     .doc(_name.text)
                                     .set({
                                   'name': _name.text,
                                   'price': _price.text,
+                                  'image': image
                                 });
                                 _name.clear();
                                 _price.clear();
