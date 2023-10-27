@@ -40,13 +40,16 @@ dependencies:
   google_nav_bar: ^5.0.6
   cloud_firestore: ^4.8.4
   cart_stepper: ^4.1.2
-  flutter_cart: ^0.0.8
   fluttertoast: ^8.2.2
   provider: ^6.0.5
   flutter_awesome_alert_box: ^2.1.1
   flutter_social_button: ^1.1.4+1
   google_sign_in: ^6.1.4
   shimmer: ^3.0.0
+  dio: ^5.3.3
+  firebase_storage: ^11.4.0
+  http: ^1.1.0
+  path_provider: ^2.1.1
 
 dev_dependencies:
   flutter_test:

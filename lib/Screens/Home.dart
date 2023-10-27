@@ -36,7 +36,6 @@ class _HomeState extends State<Home> {
     const AdminPage()
   ];
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -89,7 +88,7 @@ class _HomeState extends State<Home> {
                 const GButton(icon: (Icons.person), text: 'Profile'),
                 const GButton(
                     icon: (Icons.request_page_outlined), text: 'Your Orders'),
-                if (_auth.currentUser?.email == 'test@ves.ac.in')
+                if (_auth.currentUser?.email == 'mundhararaghav16@gmail.com')
                   const GButton(icon: (Icons.edit), text: 'Edit Menu'),
               ],
               color: Colors.white,
