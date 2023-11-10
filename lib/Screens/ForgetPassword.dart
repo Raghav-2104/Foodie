@@ -13,6 +13,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
   TextEditingController emailController = TextEditingController();
    var _formKey = GlobalKey<FormState>();
   bool _isLoading = false;
+  // ignore: unused_field
   bool _isEmailSent = false;
   String _emailError='';
   final String _emailSentSuccess = "Email Sent Successfully";

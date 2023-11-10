@@ -53,12 +53,9 @@ class _HomeState extends State<Home> {
                     onPressedYes: () {
                       GoogleSignIn().disconnect();
                       _auth.signOut();
-                      Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => LoginCustomer(
-                                    onTap: toggleScreen,
-                                  )));
+                      Navigator.pop(context);
+                      Navigator.pop(context);
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => LoginCustomer(onTap: toggleScreen,)));
                     },
                     onPressedNo: () {
                       Navigator.pop(context);
@@ -88,7 +85,7 @@ class _HomeState extends State<Home> {
                 const GButton(icon: (Icons.person), text: 'Profile'),
                 const GButton(
                     icon: (Icons.request_page_outlined), text: 'Your Orders'),
-                if (_auth.currentUser?.email == 'mundhararaghav16@gmail.com')
+                if (_auth.currentUser?.email == 'test@gmail.com')
                   const GButton(icon: (Icons.edit), text: 'Edit Menu'),
               ],
               color: Colors.white,

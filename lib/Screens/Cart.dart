@@ -26,8 +26,6 @@ class _CartState extends State<Cart> {
     setState(() {
       widget.isLoading = true;
     });
-    print('Ordering');
-    print(_auth.currentUser?.email);
     FirebaseFirestore firestore = FirebaseFirestore.instance;
     final cartRef = firestore.collection('Cart').doc(_auth.currentUser?.email);
     var cart;
