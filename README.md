@@ -32,7 +32,7 @@ To get started with Foodie, you will need to:
 
 ## Bugs
 
--Currently no bugs
+- Currently no bugs
 
 ##  Contributing
 
